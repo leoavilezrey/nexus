@@ -1,0 +1,19 @@
+# Ignorar entornos virtuales
+venv/
+env/
+.env
+
+# Ignorar archivos de Python precompilados
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorar base de datos local
+nexus.db
+nexus.db-shm
+nexus.db-wal
+*.sql
+
+# Archivos de SO
+.DS_Store
+Thumbs.db
