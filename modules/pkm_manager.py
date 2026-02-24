@@ -28,7 +28,7 @@ def create_note(title: str, tags: List[str]) -> Optional[ResourceRecord]:
         subprocess.run(['notepad', temp_path], check=True)
         
     except Exception as e:
-        print(f"[red]Error al intentar abrir el editor:[/] {e}")
+        print(f"[bold white on red]Error al intentar abrir el editor:[/] {e}")
         if os.path.exists(temp_path):
             os.remove(temp_path)
         return None
@@ -43,7 +43,7 @@ def create_note(title: str, tags: List[str]) -> Optional[ResourceRecord]:
         
     # Si la nota quedó vacía o con el texto por defecto, la abortamos para no ensuciar la BD
     if not content or content == f"# {title}\n\nEscribe tu nota aquí...":
-        print("[red]La nota está vacía o sin cambios. Abortando guardado.[/red]")
+        print("[bold white on red]La nota está vacía o sin cambios. Abortando guardado.[/]")
         return None
         
     # 5. Mapear los datos al esquema de Pydantic y guardarlos a la BD

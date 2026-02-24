@@ -3,7 +3,7 @@ from typing import Optional, Dict, Any, Literal
 from pydantic import BaseModel, Field
 
 # Definición de tipos permitidos para el registro
-ResourceType = Literal['file', 'youtube', 'note', 'concept', 'app', 'account']
+ResourceType = Literal['file', 'youtube', 'web', 'note', 'concept', 'app', 'account']
 
 class ResourceRecord(BaseModel):
     """
@@ -16,6 +16,7 @@ class ResourceRecord(BaseModel):
     path_url: str = Field(..., description="Ruta física local o URL externa")
     content_raw: Optional[str] = Field(default=None, description="Contenido extraído o notas")
     metadata_dict: Dict[str, Any] = Field(default_factory=dict, description="Metadatos en formato JSON")
+    is_flashcard_source: bool = Field(default=False, description="¿Marcado como fuente de flashcards?")
     created_at: datetime = Field(default_factory=datetime.utcnow)
     modified_at: datetime = Field(default_factory=datetime.utcnow)
 

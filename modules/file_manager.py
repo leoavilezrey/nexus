@@ -18,7 +18,7 @@ def ingest_local_file(filepath: str, tags: List[str]) -> Optional[ResourceRecord
     
     # 1. Validación de existencia
     if not file_path_obj.exists() or not file_path_obj.is_file():
-        print(f"[red]Error:[/] El archivo no existe o no es un archivo válido: {filepath}")
+        print(f"[bold white on red]Error:[/] El archivo no existe o no es un archivo válido: {filepath}")
         return None
 
     # 2. Extracción de Metadatos Base
@@ -87,7 +87,7 @@ def ingest_local_file(filepath: str, tags: List[str]) -> Optional[ResourceRecord
         return rr
         
     except Exception as e:
-        print(f"[red]Error fatal al intentar guardar en la base de datos:[/] {e}")
+        print(f"[bold white on red]Error fatal al intentar guardar en la base de datos:[/] {e}")
         return None
 
 if __name__ == "__main__":

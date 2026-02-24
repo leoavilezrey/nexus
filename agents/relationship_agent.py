@@ -6,11 +6,13 @@ try:
     from google import genai
     from google.genai import types
 except ImportError:
-    print("[red]Librería 'google-genai' no encontrada. Verifica si se instaló correctamente.[/red]")
+    print("[bold white on red]Librería 'google-genai' no encontrada. Verifica si se instaló correctamente.[/]")
 
 from pydantic import TypeAdapter
 
-from core.models import ResourceRecord, StudyCard
+from core.models import StudyCard
+# Importamos la abstracción de SQLalchemy (Record) directamente, ya que el dashboard nos arroja un Registry.
+from core.database import Registry
 
 def get_client():
     """Obtiene el cliente estandarizado GenAI agarrando GOOGLE_API_KEY local."""
@@ -19,7 +21,7 @@ def get_client():
         print("[yellow]Advertencia: No se encontró GOOGLE_API_KEY en variables de entorno. Las llamadas fallarán si no se setea.[/yellow]")
     return genai.Client(api_key=api_key)
 
-def generate_relationship_cards(record_a: ResourceRecord, record_b: ResourceRecord) -> List[StudyCard]:
+def generate_relationship_cards(record_a: Registry, record_b: Registry) -> List[StudyCard]:
     """
     Agente Pedagógico Match Forzado.
     Genera tarjetas (StudyCard) mediante inteligencia artificial centradas en la diferenciación 
@@ -34,12 +36,12 @@ def generate_relationship_cards(record_a: ResourceRecord, record_b: ResourceReco
     --- Registro A (ID Ficticio o Real: {record_a.id}) ---
     Título: {record_a.title}
     Info Cruda: {record_a.content_raw}
-    Extra Metadatos: {record_a.metadata_dict}
+    Extra Metadatos: {record_a.meta_info}
 
     --- Registro B (ID Ficticio o Real: {record_b.id}) ---
     Título: {record_b.title}
     Info Cruda: {record_b.content_raw}
-    Extra Metadatos: {record_b.metadata_dict}
+    Extra Metadatos: {record_b.meta_info}
 
     Reglas de Diseño (IMPORTANTE):
     1. Preguntas de Identificación: Presenta una característica, ventaja o desventaja y pregunta a CUÁL de los dos conceptos pertenece. 
@@ -57,6 +59,18 @@ def generate_relationship_cards(record_a: ResourceRecord, record_b: ResourceReco
         response_schema=list[StudyCard],
         temperature=0.3
     )
+
+    if not os.environ.get("GOOGLE_API_KEY"):
+        # Mockup Funcional si no hay llave para evitar el Crash Masivo
+        print("[yellow]\n[Mockup Mode] Simulación de IA en curso debido a ausencia de API KEY. Generando tarjeta de prueba...[/yellow]")
+        return [
+            StudyCard(
+                parent_id=record_a.id,
+                question=f"A diferencia del registro '{record_b.title}', ¿qué característica exclusiva tiene '{record_a.title}'?",
+                answer=f"(Generado por MockIA) - El concepto A resalta por atributos no compartidos con B.",
+                card_type="Relacional"
+            )
+        ]
 
     models_to_try = [
         "gemini-2.5-flash",
@@ -85,7 +99,7 @@ def generate_relationship_cards(record_a: ResourceRecord, record_b: ResourceReco
             # Silenciar error para intentar el próximo modelo silenciosamente como pidió el blueprint
             # pero imprimir la excepcion si es el ultimo modelo
             if model_name == models_to_try[-1]:
-                print(f"[red]Error Fatal: Todos los modelos de Gemini fallaron. Último intento ({model_name}) dio el error: {e}[/red]")
+                print(f"[bold white on red]Error Fatal: Todos los modelos de Gemini fallaron. Último intento ({model_name}) dio el error: {e}[/]")
             continue
 
     return []

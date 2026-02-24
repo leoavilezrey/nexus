@@ -8,11 +8,17 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Ignorar base de datos local
+# Ignorar base de datos local y temporales
 nexus.db
 nexus.db-shm
 nexus.db-wal
+nexus.sqlite
+nexus_data.db
+files.db
+core/files.db
 *.sql
+*.sqlite
+*.db
 
 # Archivos de SO
 .DS_Store

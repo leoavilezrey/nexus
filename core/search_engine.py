@@ -1,5 +1,5 @@
 from typing import Optional, List
-from sqlalchemy import or_, and_, not_
+from sqlalchemy import or_, and_, not_, func
 from sqlalchemy.orm import Session
 
 from core.database import Registry, Tag
@@ -15,6 +15,8 @@ def search_registry(
     inc_extensions: Optional[List[str]] = None,
     exc_extensions: Optional[List[str]] = None,
     has_info: Optional[str] = None,
+    record_ids_str: Optional[str] = None,
+    is_flashcard_source: Optional[str] = None,
     limit: int = 50,
     offset: int = 0
 ) -> List[ResourceRecord]:
@@ -78,7 +80,7 @@ def search_registry(
                 ext_dot = f".{ext_no_dot}"
                 # Buscar en la URL/Path físico, o usando el casteo JSON de SQLAlchemy de 'meta_info'
                 conditions.append(Registry.path_url.ilike(f"%{ext_dot}"))
-                conditions.append(Registry.meta_info['extension'].astext.ilike(ext_no_dot))
+                conditions.append(func.json_extract(Registry.meta_info, '$.extension').ilike(ext_no_dot))
 
             if has_web:
                 conditions.append(Registry.type.in_(['youtube', 'account', 'note', 'app']))
@@ -100,7 +102,7 @@ def search_registry(
                 ext_no_dot = ext.lstrip('.')
                 ext_dot = f".{ext_no_dot}"
                 conditions.append(Registry.path_url.ilike(f"%{ext_dot}"))
-                conditions.append(Registry.meta_info['extension'].astext.ilike(ext_no_dot))
+                conditions.append(func.json_extract(Registry.meta_info, '$.extension').ilike(ext_no_dot))
 
             if has_web:
                 conditions.append(Registry.type.in_(['youtube', 'account']))
@@ -130,13 +132,49 @@ def search_registry(
                 )
             )
 
-    # 6. Paginador y Orden (Siempre el modificado recientemente de primero)
+    # 6. Filtrado por IDs específicos (Misma lógica csv / rangos que dashboard)
+    if record_ids_str:
+        ids_to_search = []
+        for part in record_ids_str.split(','):
+            part = part.strip()
+            if '-' in part and not part.startswith('-'):
+                try:
+                    s_id, e_id = part.split('-')
+                    ids_to_search.extend(range(min(int(s_id), int(e_id)), max(int(s_id), int(e_id)) + 1))
+                except ValueError:
+                    pass
+            else:
+                try:
+                    if part: ids_to_search.append(int(part))
+                except ValueError:
+                    pass
+        if ids_to_search:
+            query = query.filter(Registry.id.in_(list(set(ids_to_search))))
+
+    # 7. Es Fuente de Flashcard -> 's' o 'n'
+    if is_flashcard_source:
+        from core.database import Card
+        f_val = is_flashcard_source.lower().strip()
+        if f_val == 's':
+            # Se devuelven los que tengan el check = 1 explícito, o que implícitamente YA tengan tarjetas hijas en la BD
+            query = query.filter(or_(
+                Registry.is_flashcard_source == 1,
+                Registry.id.in_(db_session.query(Card.parent_id))
+            ))
+        elif f_val == 'n':
+            # Solo registros sin el flag explícito, y que TAMPOCO tengan tarjetas hijas
+            query = query.filter(and_(
+                or_(Registry.is_flashcard_source == 0, Registry.is_flashcard_source.is_(None)),
+                not_(Registry.id.in_(db_session.query(Card.parent_id)))
+            ))
+
+    # 8. Paginador y Orden (Siempre el modificado recientemente de primero)
     query = query.order_by(Registry.modified_at.desc()).limit(limit).offset(offset)
     
-    # 7. Ejecución SQL
+    # 9. Ejecución SQL
     results = query.all()
     
-    # 8. Mapeo estricto a Pydantic (Tal y como nos pidió la Base)
+    # 10. Mapeo estricto a Pydantic (Tal y como nos pidió la Base)
     pydantic_results: List[ResourceRecord] = []
     for row in results:
         # Algunos registros podrían no tener diccionario json si fueron inserts manuales parciales SQLite
@@ -148,6 +186,7 @@ def search_registry(
             path_url=row.path_url or "",
             content_raw=row.content_raw,
             metadata_dict=meta,
+            is_flashcard_source=bool(row.is_flashcard_source),
             created_at=row.created_at,
             modified_at=row.modified_at
         )

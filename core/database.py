@@ -53,7 +53,7 @@ class Registry(Base):
     __tablename__ = 'registry'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    type = Column(String, nullable=False) # file, youtube, note, concept, app, account
+    type = Column(String, nullable=False) # file, youtube, web, note, concept, app, account
     title = Column(Text, nullable=True)
     path_url = Column(Text, nullable=True)
     content_raw = Column(Text, nullable=True)
@@ -61,6 +61,8 @@ class Registry(Base):
     # Python atributo será 'meta_info', pero en la base de datos se llama 'metadata'
     # Esto previene choques con 'Base.metadata'
     meta_info = Column('metadata', JSON, nullable=True)
+    
+    is_flashcard_source = Column(Integer, default=0) # 0=False, 1=True
     
     created_at = Column(DateTime, default=datetime.utcnow)
     modified_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -136,11 +138,12 @@ class Card(Base):
 class RegistryCreate(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    type: str = Field(..., description="file, youtube, note, concept, app, account")
+    type: str = Field(..., description="file, youtube, web, note, concept, app, account")
     title: Optional[str] = None
     path_url: Optional[str] = None
     content_raw: Optional[str] = None
     meta_info: Optional[Dict[str, Any]] = None
+    is_flashcard_source: bool = False
 
 class TagCreate(BaseModel):
     value: str
@@ -177,6 +180,18 @@ class NexusCRUD:
     def create_registry(self, data: RegistryCreate) -> Registry:
         """Crea un nuevo registro usando los esquemas de Pydantic."""
         with self.Session() as session:
+            # Validación: Evitar duplicados por path_url (excepto notas donde path_url puede ser nulo, pero si existe se bloquea)
+            if data.path_url:
+                existing = session.query(Registry).filter(Registry.path_url == data.path_url).first()
+                if existing:
+                    console.print(f"[bold white on red]❌ Error de Duplicado:[/] El registro con la ruta/URL '{data.path_url}' ya existe en el Súper Schema (ID {existing.id}). Operación bloqueada.")
+                    raise ValueError(f"Registro Duplicado: {data.path_url}")
+
+            # Validación: Descripción obligatoria
+            if not data.content_raw or not data.content_raw.strip():
+                console.print("[yellow]Aviso: No se proporcionó descripción. Usando título como descripción básica requerida.[/yellow]")
+                data.content_raw = f"(Auto-Descripción) Título: {data.title} | Ruta: {data.path_url}"
+
             # Usar model_dump() de Pydantic v2
             reg = Registry(**data.model_dump())
             session.add(reg)
@@ -219,6 +234,20 @@ class NexusCRUD:
             session.refresh(card)
             console.print(f"[yellow]Card Creada:[/] Asociada al registro ID {card.parent_id}")
             return card
+
+    def delete_registry(self, registry_id: int) -> bool:
+        """Elimina un registro física y lógicamente de la Base de Datos, destruyendo dependencias por si SQLite no activó el PRAGMA CASCADE."""
+        with self.Session() as session:
+            from sqlalchemy import or_
+            # Eliminación explícita defensiva 
+            session.query(Tag).filter(Tag.registry_id == registry_id).delete(synchronize_session=False)
+            session.query(NexusLink).filter(or_(NexusLink.source_id == registry_id, NexusLink.target_id == registry_id)).delete(synchronize_session=False)
+            session.query(Card).filter(Card.parent_id == registry_id).delete(synchronize_session=False)
+            
+            # Matar registro principal
+            deleted = session.query(Registry).filter(Registry.id == registry_id).delete(synchronize_session=False)
+            session.commit()
+            return deleted > 0
 
 # Exportamos la instancia para su uso global si así se requiere
 nx_db = NexusCRUD()
