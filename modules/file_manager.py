@@ -4,6 +4,9 @@ from typing import List, Optional
 
 from core.database import nx_db, RegistryCreate, TagCreate
 from core.models import ResourceRecord
+from rich.console import Console
+
+console = Console()
 
 # Definimos extensiones que consideramos texto plano directamente legible
 TEXT_EXTENSIONS = {'.txt', '.md', '.csv', '.json', '.xml', '.py', '.js', '.html', '.css', '.ini', '.yaml', '.yml'}
@@ -18,7 +21,7 @@ def ingest_local_file(filepath: str, tags: List[str]) -> Optional[ResourceRecord
     
     # 1. Validación de existencia
     if not file_path_obj.exists() or not file_path_obj.is_file():
-        print(f"[bold white on red]Error:[/] El archivo no existe o no es un archivo válido: {filepath}")
+        console.print(f"[bold white on red]Error:[/] El archivo no existe o no es un archivo válido: {filepath}")
         return None
 
     # 2. Extracción de Metadatos Base
@@ -29,7 +32,7 @@ def ingest_local_file(filepath: str, tags: List[str]) -> Optional[ResourceRecord
     try:
         size_bytes = file_path_obj.stat().st_size
     except Exception as e:
-        print(f"[yellow]Advertencia:[/] No se pudo obtener el tamaño de {filepath}. Error: {e}")
+        console.print(f"[yellow]Advertencia:[/] No se pudo obtener el tamaño de {filepath}. Error: {e}")
         size_bytes = 0
 
     # 3. Manejo de Texto Plano (Lectura Rápida)
@@ -43,7 +46,7 @@ def ingest_local_file(filepath: str, tags: List[str]) -> Optional[ResourceRecord
                 if len(content_raw) == 5000:
                     content_raw += "\n...[Contenido truncado]"
         except Exception as e:
-            print(f"[yellow]Advertencia:[/] No se pudo extraer texto parcial de {filepath}. Error: {e}")
+            console.print(f"[yellow]Advertencia:[/] No se pudo extraer texto parcial de {filepath}. Error: {e}")
 
     # Estructura del diccionario JSON para el campo 'meta_info' (metadatos base)
     meta_info = {
@@ -87,7 +90,7 @@ def ingest_local_file(filepath: str, tags: List[str]) -> Optional[ResourceRecord
         return rr
         
     except Exception as e:
-        print(f"[bold white on red]Error fatal al intentar guardar en la base de datos:[/] {e}")
+        console.print(f"[bold white on red]Error fatal al intentar guardar en la base de datos:[/] {e}")
         return None
 
 if __name__ == "__main__":

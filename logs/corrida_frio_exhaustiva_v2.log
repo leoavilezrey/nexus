@@ -1,0 +1,189 @@
+[10:02:40] [INFO] 
+================================================================================
+[10:02:40] [INFO]   SECCION 1: IMPORTS DEL SISTEMA
+[10:02:40] [INFO] ================================================================================
+[10:04:43] [PASS] ✅ PASS | [Dashboard] Import funciones principales | 12 funciones importadas correctamente
+[10:04:43] [PASS] ✅ PASS | [Core] Import database | 
+[10:04:43] [PASS] ✅ PASS | [Core] Import search_engine | 
+[10:04:43] [PASS] ✅ PASS | [Core] Import staging_db | 
+[10:04:43] [PASS] ✅ PASS | [Modules] Import todos los modulos | 7 modulos OK
+[10:04:43] [PASS] ✅ PASS | [Agents] Import agentes principales | study, summary, relationship, deepseek
+[10:04:55] [PASS] ✅ PASS | [Agents] Import mutation_agent | pydantic_ai OK
+[10:04:55] [INFO] 
+================================================================================
+[10:04:55] [INFO]   SECCION 2: COMPONENTES VISUALES
+[10:04:55] [INFO] ================================================================================
+[10:04:56] [PASS] ✅ PASS | [Visual] show_header() sin crash | 
+[10:04:57] [PASS] ✅ PASS | [Visual] get_stats_panel() sin filtros | Tipo: Panel
+[10:04:57] [PASS] ✅ PASS | [Visual] get_stats_panel(con filtros) | 
+[10:04:57] [INFO] 
+================================================================================
+[10:04:57] [INFO]   SECCION 3: CRUD Y DATOS DE PRUEBA
+[10:04:57] [INFO] ================================================================================
+[10:04:57] [PASS] ✅ PASS | [CRUD] create_registry test #1 | ID: 23804
+[10:04:57] [PASS] ✅ PASS | [CRUD] create_registry test #2 | ID: 23805
+[10:04:58] [PASS] ✅ PASS | [CRUD] create_registry test #3 | ID: 23806
+[10:04:58] [PASS] ✅ PASS | [CRUD] add_tags ID 23804 | cold_run_v2, automated_test
+[10:04:58] [PASS] ✅ PASS | [CRUD] add_tags ID 23805 | cold_run_v2, automated_test
+[10:04:58] [PASS] ✅ PASS | [CRUD] add_tags ID 23806 | cold_run_v2, automated_test
+[10:04:58] [PASS] ✅ PASS | [CRUD] create_card | Card ID: 224
+[10:04:58] [PASS] ✅ PASS | [CRUD] create_link | Link ID: 5
+[10:04:58] [PASS] ✅ PASS | [CRUD] get_registry + verify | ID=23804, Title OK, Content OK
+[10:04:58] [PASS] ✅ PASS | [CRUD] update_summary | 
+[10:04:58] [INFO] 
+================================================================================
+[10:04:58] [INFO]   SECCION 4: MOTOR DE BUSQUEDA — PRUEBAS DETALLADAS
+[10:04:58] [INFO] ================================================================================
+[10:04:58] [PASS] ✅ PASS | [Search] Sin filtros (limit=5) | Resultados: 5
+[10:04:58] [PASS] ✅ PASS | [Search] Filtro inc_name_path='__COLD_RUN_TEST' | Resultados: 3 (esperado >= 3)
+[10:04:58] [PASS] ✅ PASS | [Search] Filtro inc_tags='cold_run_v2' | Resultados: 3
+[10:04:58] [PASS] ✅ PASS | [Search] Filtro exc_tags (excluir cold_run_v2) | Resultados: 0 (esperado 0)
+[10:04:58] [PASS] ✅ PASS | [Search] Filtro inc_extensions=['web'] | Resultados: 5
+[10:04:59] [PASS] ✅ PASS | [Search] Filtro inc_extensions=['youtube'] | Resultados: 5
+[10:04:59] [PASS] ✅ PASS | [Search] Filtro inc_extensions=['note'] | Resultados: 0
+[10:04:59] [PASS] ✅ PASS | [Search] Filtro record_ids_str='1-5' | Resultados: 3
+[10:04:59] [PASS] ✅ PASS | [Search] Filtro record_ids_str='23804,23805,23806' | Resultados: 3 (esperado 3)
+[10:04:59] [PASS] ✅ PASS | [Search] Filtro is_flashcard_source='s' | Con flashcards: 5
+[10:04:59] [PASS] ✅ PASS | [Search] Filtro has_info='y' | Con info: 5
+[10:04:59] [PASS] ✅ PASS | [Search] Paginacion (offset 0 vs 5) | Page0[0].id=23804, Page1[0].id=23801
+[10:04:59] [PASS] ✅ PASS | [Search] parse_query_string('python') | Parsed: {"inc_name": "python"}
+[10:04:59] [PASS] ✅ PASS | [Search] parse_query_string('t:docs') | Parsed: {"inc_tags": "docs"}
+[10:04:59] [PASS] ✅ PASS | [Search] parse_query_string('-t:old') | Parsed: {"exc_tags": "old"}
+[10:04:59] [PASS] ✅ PASS | [Search] parse_query_string('e:pdf') | Parsed: {"inc_exts": "pdf"}
+[10:04:59] [PASS] ✅ PASS | [Search] parse_query_string('-e:py') | Parsed: {"exc_exts": "py"}
+[10:04:59] [PASS] ✅ PASS | [Search] parse_query_string('i:1-50') | Parsed: {"inc_ids": "1-50"}
+[10:04:59] [FAIL] ❌ FAIL | [Search] parse_query_string('s:y') | Parsed: {"is_source": "s"}
+[10:04:59] [FAIL] ❌ FAIL | [Search] parse_query_string('h:y') | Parsed: {"inc_name": "h:y"}
+[10:04:59] [PASS] ✅ PASS | [Search] parse_query_string('python t:docs -t:old e:pdf i:1-50 s:y') | Parsed: {"inc_name": "python", "inc_tags": "docs", "exc_tags": "old", "inc_exts": "pdf", "inc_ids": "1-50", "is_source": "s"}
+[10:04:59] [INFO] 
+================================================================================
+[10:04:59] [INFO]   SECCION 5: MENU 2 GESTIONAR — ANALISIS DE CODIGO PROFUNDO
+[10:04:59] [INFO] ================================================================================
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] menu_gestionar acepta initial_query | Parametro initial_query presente
+[10:04:59] [INFO]   Verificando logica de paginacion...
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Logica de paginacion (page +=1, -=1, has_next) | Inc:True Dec:True HasNext:True
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Guard: ultima pagina no incrementa | Condicion has_next verificada antes de incremento
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Guard: primera pagina no decrementa | Condicion page > 0 verificada antes de decremento
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Filtro Q parse_query_string | parse_query_string invocado para Q
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Limpieza L (reset filtros) | Comando L reconocido
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Borrado del + confirmacion | del + confirmacion 'eliminar lote'
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Vinculacion m/ia implementada | Ambos modos presentes
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Detalle por ID (parseo de entrada numerica) | ID numerico reconocido como entrada
+[10:04:59] [INFO]   Verificando columnas de tabla...
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Tabla contiene columnas basicas (ID, Tipo, Tags) | Columnas verificadas: ['ID', 'Tipo', 'Tags']
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] content_raw None guard en tabla | Guard (or '') presente para content_raw
+[10:04:59] [PASS] ✅ PASS | [Menu2:Code] Salida con 0 (break) | cmd_lower == '0' -> break
+[10:04:59] [INFO] 
+================================================================================
+[10:04:59] [INFO]   SECCION 6: OMNIBAR — ANALISIS EXHAUSTIVO
+[10:04:59] [INFO] ================================================================================
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] elif user_input: activa omnibar | Entrada no-menu activa omnibar
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] Deteccion de ':' como comando desconocido | ':comando' detectado como invalido
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] Mensaje 'Comando desconocido' en amarillo | Feedback visual correcto
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] Omnibar invoca menu_gestionar(initial_query=) | Pasa user_input como filtro inicial
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] Mensaje 'Saltando al Gestor' visible | Feedback visual presente
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] user_input.strip() aplicado | Entrada limpiada de espacios
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] Comandos de salida reconocidos (5,0,q,exit,quit) | Encontrados: ['"5"', '"0"', '"q"', '"exit"', '"quit"']
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] Captura ReturnToMain exception | ReturnToMain manejado con continue
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Code] Captura Exception general con logger | Exception capturada + logger.exception
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Run] parse_query_string('python') | OK: {"inc_name": "python"}
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Run] parse_query_string('t:youtube') | OK: {"inc_tags": "youtube"}
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Run] parse_query_string('e:pdf') | OK: {"inc_exts": "pdf"}
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Run] parse_query_string('python t:docs e:web') | OK: {"inc_name": "python", "inc_tags": "docs", "inc_exts": "web"}
+[10:04:59] [PASS] ✅ PASS | [Omnibar:Run] parse_query_string('i:1-10') | OK: {"inc_ids": "1-10"}
+[10:05:00] [PASS] ✅ PASS | [Omnibar:Run] Busqueda real con 'python' | Resultados: 5
+[10:05:00] [PASS] ✅ PASS | [Omnibar:Run] Busqueda real con '__COLD_RUN_TEST' | Resultados: 3
+[10:05:00] [INFO] 
+================================================================================
+[10:05:00] [INFO]   SECCION 7: CTRL+C / KeyboardInterrupt — ANALISIS EXHAUSTIVO
+[10:05:00] [INFO] ================================================================================
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] main.py maneja KeyboardInterrupt | KeyboardInterrupt capturado en main.py
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] main.py hace sys.exit(0) en handler | Salida limpia con exit code 0
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] dashboard.py __main__ maneja KeyboardInterrupt | KeyboardInterrupt en bloque __main__
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] Mensaje 'Interrupcion detectada' formateado | Mensaje visible al usuario
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] main_loop captura Exception (no KeyboardInterrupt) | Exception general capturada para errores internos
+[10:05:00] [INFO]   Analizando como Rich Prompt.ask maneja Ctrl+C...
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] Rich Prompt.ask es un classmethod | Prompt.ask disponible
+[10:05:00] [INFO]   Verificando que menu_agregar esta protegido por exception handler de main_loop...
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] menu_agregar() dentro del try de main_loop | try@1988, menu_agregar@2043, except@3002
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] menu_agregar protegido por exception handler | Posicion relativa OK
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] menu_gestionar protegido por exception handler | Posicion relativa OK
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] menu_active_recall protegido por exception handler | Posicion relativa OK
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] menu_estadisticas protegido por exception handler | Posicion relativa OK
+[10:05:00] [INFO]   Analizando manejo de interrupcion en menu_agregar opcion 1...
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] menu_agregar opcion 1: Prompt.ask para ruta | Prompt visible para ruta de archivo
+[10:05:00] [FAIL] ❌ FAIL | [Ctrl+C:Code] menu_agregar opcion 1: try/except en ingesta | try:False, except:False
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] Validacion ruta vacia en menu_agregar | Guard contra ruta vacia implementado
+[10:05:00] [PASS] ✅ PASS | [Ctrl+C:Code] Validacion URL vacia en menu_agregar | Guard contra URL vacia implementado
+[10:05:00] [INFO] 
+================================================================================
+[10:05:00] [INFO]   SECCION 8: AGENTES IA (MODO MOCKUP)
+[10:05:00] [INFO] ================================================================================
+[10:05:00] [PASS] ✅ PASS | [AgentIA] study_agent mockup | Cards: 1
+[10:05:09] [PASS] ✅ PASS | [AgentIA] summary_agent | Resumen: 913 chars
+[10:05:09] [PASS] ✅ PASS | [SRS] SRSEngine.calculate_next_review | Stability: 3.00
+[10:05:09] [INFO] 
+================================================================================
+[10:05:09] [INFO]   SECCION 9: ANALISIS ESTATICO GLOBAL
+[10:05:09] [INFO] ================================================================================
+[10:05:12] [PASS] ✅ PASS | [Estatico] Sin print() con Rich tags (todos usan console.print) | Verificados 4115 directorios
+[10:05:12] [PASS] ✅ PASS | [Estatico] Sin bare except en dashboard | Encontrados: 0
+[10:05:12] [PASS] ✅ PASS | [Estatico] Sin nx_db shadowing | OK
+[10:05:12] [PASS] ✅ PASS | [Estatico] Logger configurado | Logger presente
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en modules/file_manager.py | 
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en modules/pipeline_manager.py | 
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en modules/pkm_manager.py | 
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en modules/study_engine.py | 
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en modules/web_scraper.py | 
+[10:05:12] [FAIL] ❌ FAIL | [Estatico] Console importado en modules/youtube_manager.py | Usa console sin importar
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en agents/deepseek_agent.py | 
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en agents/mutation_agent.py | 
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en agents/relationship_agent.py | 
+[10:05:12] [PASS] ✅ PASS | [Estatico] Console importado en agents/study_agent.py | 
+[10:05:12] [INFO] 
+================================================================================
+[10:05:12] [INFO]   SECCION 10: INTEGRIDAD BASE DE DATOS
+[10:05:12] [INFO] ================================================================================
+[10:05:12] [PASS] ✅ PASS | [Integridad] Cards huerfanas | Encontradas: 0
+[10:05:12] [PASS] ✅ PASS | [Integridad] Tags huerfanos | Encontrados: 0
+[10:05:12] [PASS] ✅ PASS | [Integridad] Links huerfanos | Encontrados: 0
+[10:05:12] [PASS] ✅ PASS | [Integridad] PRAGMA journal_mode=WAL | Actual: wal
+[10:05:12] [PASS] ✅ PASS | [Integridad] PRAGMA foreign_keys=ON | Actual: 1
+[10:05:12] [PASS] ✅ PASS | [Integridad] Conteos | Registry:19957 Tags:792 Cards:217 Links:5
+[10:05:12] [INFO] 
+================================================================================
+[10:05:12] [INFO]   CLEANUP: Eliminando datos de prueba
+[10:05:12] [INFO] ================================================================================
+[10:05:12] [INFO]   Eliminado registro ID 23804
+[10:05:12] [INFO]   Eliminado registro ID 23805
+[10:05:12] [INFO]   Eliminado registro ID 23806
+[10:05:12] [INFO] 
+================================================================================
+[10:05:12] [INFO]   RESUMEN EJECUTIVO — CORRIDA EN FRIO EXHAUSTIVA v2
+[10:05:12] [INFO] ================================================================================
+[10:05:12] [INFO] Total de tests: 107
+[10:05:12] [INFO] ✅ Pasados:  103
+[10:05:12] [INFO] ❌ Fallidos: 4
+[10:05:12] [INFO] Tasa de exito: 96.3%
+[10:05:12] [INFO] 
+Desglose por seccion:
+[10:05:12] [INFO]   ✅ 1. Imports: 7/7
+[10:05:12] [INFO]   ✅ 2. Visuales: 3/3
+[10:05:12] [INFO]   ✅ 3. CRUD: 10/10
+[10:05:12] [INFO]   ❌ 4. Busqueda: 19/21
+[10:05:12] [INFO]   ✅ 5. Menu2 Code: 12/12
+[10:05:12] [INFO]   ✅ 6. Omnibar: 16/16
+[10:05:12] [INFO]   ❌ 7. Ctrl+C: 14/15
+[10:05:12] [INFO]   ✅ 8. Agentes IA: 3/3
+[10:05:12] [INFO]   ❌ 9. Estatico: 13/14
+[10:05:12] [INFO]   ✅ 10. Integridad: 6/6
+[10:05:12] [INFO] 
+TESTS FALLIDOS (requieren atencion):
+[10:05:12] [INFO]   ❌ [Search] parse_query_string('s:y'): Parsed: {"is_source": "s"} [DEEP]
+[10:05:12] [INFO]       Ubicacion: search_engine.py:L204-254
+[10:05:12] [INFO]   ❌ [Search] parse_query_string('h:y'): Parsed: {"inc_name": "h:y"} [DEEP]
+[10:05:12] [INFO]       Ubicacion: search_engine.py:L204-254
+[10:05:12] [INFO]   ❌ [Ctrl+C:Code] menu_agregar opcion 1: try/except en ingesta: try:False, except:False [CRITICAL]
+[10:05:12] [INFO]       Ubicacion: dashboard.py:L188-193
+[10:05:12] [INFO]   ❌ [Estatico] Console importado en modules/youtube_manager.py: Usa console sin importar
+[10:05:12] [INFO]       Ubicacion: modules/youtube_manager.py

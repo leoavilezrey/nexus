@@ -1,0 +1,1131 @@
+{
+  "timestamp": "2026-03-01T10:05:12.584930",
+  "total": 107,
+  "passed": 103,
+  "failed": 4,
+  "rate": 96.3,
+  "sections": {
+    "1. Imports": {
+      "total": 7,
+      "passed": 7,
+      "failed": 0
+    },
+    "2. Visuales": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "3. CRUD": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0
+    },
+    "4. Busqueda": {
+      "total": 21,
+      "passed": 19,
+      "failed": 2
+    },
+    "5. Menu2 Code": {
+      "total": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "6. Omnibar": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    "7. Ctrl+C": {
+      "total": 15,
+      "passed": 14,
+      "failed": 1
+    },
+    "8. Agentes IA": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0
+    },
+    "9. Estatico": {
+      "total": 14,
+      "passed": 13,
+      "failed": 1
+    },
+    "10. Integridad": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0
+    }
+  },
+  "results": [
+    {
+      "section": "1. Imports",
+      "component": "Dashboard",
+      "test": "Import funciones principales",
+      "passed": true,
+      "details": "12 funciones importadas correctamente",
+      "location": "ui/dashboard.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:43.565653"
+    },
+    {
+      "section": "1. Imports",
+      "component": "Core",
+      "test": "Import database",
+      "passed": true,
+      "details": "",
+      "location": "core/database.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:43.566690"
+    },
+    {
+      "section": "1. Imports",
+      "component": "Core",
+      "test": "Import search_engine",
+      "passed": true,
+      "details": "",
+      "location": "core/search_engine.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:43.567559"
+    },
+    {
+      "section": "1. Imports",
+      "component": "Core",
+      "test": "Import staging_db",
+      "passed": true,
+      "details": "",
+      "location": "core/staging_db.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:43.568234"
+    },
+    {
+      "section": "1. Imports",
+      "component": "Modules",
+      "test": "Import todos los modulos",
+      "passed": true,
+      "details": "7 modulos OK",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:43.569104"
+    },
+    {
+      "section": "1. Imports",
+      "component": "Agents",
+      "test": "Import agentes principales",
+      "passed": true,
+      "details": "study, summary, relationship, deepseek",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:43.626917"
+    },
+    {
+      "section": "1. Imports",
+      "component": "Agents",
+      "test": "Import mutation_agent",
+      "passed": true,
+      "details": "pydantic_ai OK",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:55.006932"
+    },
+    {
+      "section": "2. Visuales",
+      "component": "Visual",
+      "test": "show_header() sin crash",
+      "passed": true,
+      "details": "",
+      "location": "dashboard.py:L85-93",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:56.827834"
+    },
+    {
+      "section": "2. Visuales",
+      "component": "Visual",
+      "test": "get_stats_panel() sin filtros",
+      "passed": true,
+      "details": "Tipo: Panel",
+      "location": "dashboard.py:L95-121",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:57.645975"
+    },
+    {
+      "section": "2. Visuales",
+      "component": "Visual",
+      "test": "get_stats_panel(con filtros)",
+      "passed": true,
+      "details": "",
+      "location": "dashboard.py:L95-121",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:57.743235"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "create_registry test #1",
+      "passed": true,
+      "details": "ID: 23804",
+      "location": "database.py:L178-200",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:57.918224"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "create_registry test #2",
+      "passed": true,
+      "details": "ID: 23805",
+      "location": "database.py:L178-200",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:57.994989"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "create_registry test #3",
+      "passed": true,
+      "details": "ID: 23806",
+      "location": "database.py:L178-200",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:58.059799"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "add_tags ID 23804",
+      "passed": true,
+      "details": "cold_run_v2, automated_test",
+      "location": "database.py:L210-216",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:58.074428"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "add_tags ID 23805",
+      "passed": true,
+      "details": "cold_run_v2, automated_test",
+      "location": "database.py:L210-216",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:58.087589"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "add_tags ID 23806",
+      "passed": true,
+      "details": "cold_run_v2, automated_test",
+      "location": "database.py:L210-216",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:58.098789"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "create_card",
+      "passed": true,
+      "details": "Card ID: 224",
+      "location": "database.py:L225-233",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:58.121899"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "create_link",
+      "passed": true,
+      "details": "Link ID: 5",
+      "location": "database.py:L218-224",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:58.137033"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "get_registry + verify",
+      "passed": true,
+      "details": "ID=23804, Title OK, Content OK",
+      "location": "database.py:L202-208",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:58.146494"
+    },
+    {
+      "section": "3. CRUD",
+      "component": "CRUD",
+      "test": "update_summary",
+      "passed": true,
+      "details": "",
+      "location": "database.py:L250-256",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:04:58.154815"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Sin filtros (limit=5)",
+      "passed": true,
+      "details": "Resultados: 5",
+      "location": "search_engine.py:L8",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:58.303473"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro inc_name_path='__COLD_RUN_TEST'",
+      "passed": true,
+      "details": "Resultados: 3 (esperado >= 3)",
+      "location": "search_engine.py:L36-43",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:58.586637"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro inc_tags='cold_run_v2'",
+      "passed": true,
+      "details": "Resultados: 3",
+      "location": "search_engine.py:L58-61",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:58.626777"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro exc_tags (excluir cold_run_v2)",
+      "passed": true,
+      "details": "Resultados: 0 (esperado 0)",
+      "location": "search_engine.py:L63-66",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:58.845124"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro inc_extensions=['web']",
+      "passed": true,
+      "details": "Resultados: 5",
+      "location": "search_engine.py:L68-95",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:58.996515"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro inc_extensions=['youtube']",
+      "passed": true,
+      "details": "Resultados: 5",
+      "location": "search_engine.py:L68-95",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.114864"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro inc_extensions=['note']",
+      "passed": true,
+      "details": "Resultados: 0",
+      "location": "search_engine.py:L68-95",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.329243"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro record_ids_str='1-5'",
+      "passed": true,
+      "details": "Resultados: 3",
+      "location": "search_engine.py:L143-159",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.338318"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro record_ids_str='23804,23805,23806'",
+      "passed": true,
+      "details": "Resultados: 3 (esperado 3)",
+      "location": "search_engine.py:L143-159",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.347155"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro is_flashcard_source='s'",
+      "passed": true,
+      "details": "Con flashcards: 5",
+      "location": "search_engine.py:L162-176",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.414938"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Filtro has_info='y'",
+      "passed": true,
+      "details": "Con info: 5",
+      "location": "search_engine.py:L96-115",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.487113"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "Paginacion (offset 0 vs 5)",
+      "passed": true,
+      "details": "Page0[0].id=23804, Page1[0].id=23801",
+      "location": "search_engine.py",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.703988"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('python')",
+      "passed": true,
+      "details": "Parsed: {\"inc_name\": \"python\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.709468"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('t:docs')",
+      "passed": true,
+      "details": "Parsed: {\"inc_tags\": \"docs\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.713294"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('-t:old')",
+      "passed": true,
+      "details": "Parsed: {\"exc_tags\": \"old\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.716933"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('e:pdf')",
+      "passed": true,
+      "details": "Parsed: {\"inc_exts\": \"pdf\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.720155"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('-e:py')",
+      "passed": true,
+      "details": "Parsed: {\"exc_exts\": \"py\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.723511"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('i:1-50')",
+      "passed": true,
+      "details": "Parsed: {\"inc_ids\": \"1-50\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.728989"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('s:y')",
+      "passed": false,
+      "details": "Parsed: {\"is_source\": \"s\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.732642"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('h:y')",
+      "passed": false,
+      "details": "Parsed: {\"inc_name\": \"h:y\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.735134"
+    },
+    {
+      "section": "4. Busqueda",
+      "component": "Search",
+      "test": "parse_query_string('python t:docs -t:old e:pdf i:1-50 s:y')",
+      "passed": true,
+      "details": "Parsed: {\"inc_name\": \"python\", \"inc_tags\": \"docs\", \"exc_tags\": \"old\", \"inc_exts\": \"pdf\", \"inc_ids\": \"1-50\", \"is_source\": \"s\"}",
+      "location": "search_engine.py:L204-254",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.747276"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "menu_gestionar acepta initial_query",
+      "passed": true,
+      "details": "Parametro initial_query presente",
+      "location": "dashboard.py:L415",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.787411"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Logica de paginacion (page +=1, -=1, has_next)",
+      "passed": true,
+      "details": "Inc:True Dec:True HasNext:True",
+      "location": "dashboard.py:L529-534",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.795865"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Guard: ultima pagina no incrementa",
+      "passed": true,
+      "details": "Condicion has_next verificada antes de incremento",
+      "location": "dashboard.py:L529",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.806838"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Guard: primera pagina no decrementa",
+      "passed": true,
+      "details": "Condicion page > 0 verificada antes de decremento",
+      "location": "dashboard.py:L534",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.816679"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Filtro Q parse_query_string",
+      "passed": true,
+      "details": "parse_query_string invocado para Q",
+      "location": "dashboard.py:L542",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.822388"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Limpieza L (reset filtros)",
+      "passed": true,
+      "details": "Comando L reconocido",
+      "location": "dashboard.py:L548",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.826612"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Borrado del + confirmacion",
+      "passed": true,
+      "details": "del + confirmacion 'eliminar lote'",
+      "location": "dashboard.py:L554-594",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.828749"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Vinculacion m/ia implementada",
+      "passed": true,
+      "details": "Ambos modos presentes",
+      "location": "dashboard.py:L597",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.832365"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Detalle por ID (parseo de entrada numerica)",
+      "passed": true,
+      "details": "ID numerico reconocido como entrada",
+      "location": "dashboard.py:L536-541",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.839118"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Tabla contiene columnas basicas (ID, Tipo, Tags)",
+      "passed": true,
+      "details": "Columnas verificadas: ['ID', 'Tipo', 'Tags']",
+      "location": "dashboard.py:L471-479",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.845116"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "content_raw None guard en tabla",
+      "passed": true,
+      "details": "Guard (or '') presente para content_raw",
+      "location": "dashboard.py:L492",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.850744"
+    },
+    {
+      "section": "5. Menu2 Code",
+      "component": "Menu2:Code",
+      "test": "Salida con 0 (break)",
+      "passed": true,
+      "details": "cmd_lower == '0' -> break",
+      "location": "dashboard.py:L524-525",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.853726"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "elif user_input: activa omnibar",
+      "passed": true,
+      "details": "Entrada no-menu activa omnibar",
+      "location": "dashboard.py:L1805",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.872496"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "Deteccion de ':' como comando desconocido",
+      "passed": true,
+      "details": "':comando' detectado como invalido",
+      "location": "dashboard.py:L1806",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.876463"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "Mensaje 'Comando desconocido' en amarillo",
+      "passed": true,
+      "details": "Feedback visual correcto",
+      "location": "dashboard.py:L1807",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.882942"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "Omnibar invoca menu_gestionar(initial_query=)",
+      "passed": true,
+      "details": "Pasa user_input como filtro inicial",
+      "location": "dashboard.py:L1812",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.890190"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "Mensaje 'Saltando al Gestor' visible",
+      "passed": true,
+      "details": "Feedback visual presente",
+      "location": "dashboard.py:L1810",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.894100"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "user_input.strip() aplicado",
+      "passed": true,
+      "details": "Entrada limpiada de espacios",
+      "location": "dashboard.py:L1790",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.896258"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "Comandos de salida reconocidos (5,0,q,exit,quit)",
+      "passed": true,
+      "details": "Encontrados: ['\"5\"', '\"0\"', '\"q\"', '\"exit\"', '\"quit\"']",
+      "location": "dashboard.py:L1801",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.898887"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "Captura ReturnToMain exception",
+      "passed": true,
+      "details": "ReturnToMain manejado con continue",
+      "location": "dashboard.py:L1813",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.899931"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Code",
+      "test": "Captura Exception general con logger",
+      "passed": true,
+      "details": "Exception capturada + logger.exception",
+      "location": "dashboard.py:L1815-1817",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:04:59.900675"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Run",
+      "test": "parse_query_string('python')",
+      "passed": true,
+      "details": "OK: {\"inc_name\": \"python\"}",
+      "location": "search_engine.py + dashboard.py:L430",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.901449"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Run",
+      "test": "parse_query_string('t:youtube')",
+      "passed": true,
+      "details": "OK: {\"inc_tags\": \"youtube\"}",
+      "location": "search_engine.py + dashboard.py:L430",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.902202"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Run",
+      "test": "parse_query_string('e:pdf')",
+      "passed": true,
+      "details": "OK: {\"inc_exts\": \"pdf\"}",
+      "location": "search_engine.py + dashboard.py:L430",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.905034"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Run",
+      "test": "parse_query_string('python t:docs e:web')",
+      "passed": true,
+      "details": "OK: {\"inc_name\": \"python\", \"inc_tags\": \"docs\", \"inc_exts\": \"web\"}",
+      "location": "search_engine.py + dashboard.py:L430",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.905816"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Run",
+      "test": "parse_query_string('i:1-10')",
+      "passed": true,
+      "details": "OK: {\"inc_ids\": \"1-10\"}",
+      "location": "search_engine.py + dashboard.py:L430",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:04:59.906487"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Run",
+      "test": "Busqueda real con 'python'",
+      "passed": true,
+      "details": "Resultados: 5",
+      "location": "dashboard.py:L1812 -> L444-458",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:00.084253"
+    },
+    {
+      "section": "6. Omnibar",
+      "component": "Omnibar:Run",
+      "test": "Busqueda real con '__COLD_RUN_TEST'",
+      "passed": true,
+      "details": "Resultados: 3",
+      "location": "dashboard.py:L1812 -> L444-458",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:00.233216"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "main.py maneja KeyboardInterrupt",
+      "passed": true,
+      "details": "KeyboardInterrupt capturado en main.py",
+      "location": "main.py",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.249748"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "main.py hace sys.exit(0) en handler",
+      "passed": true,
+      "details": "Salida limpia con exit code 0",
+      "location": "main.py",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.252738"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "dashboard.py __main__ maneja KeyboardInterrupt",
+      "passed": true,
+      "details": "KeyboardInterrupt en bloque __main__",
+      "location": "dashboard.py:L1821-1825",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.256773"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "Mensaje 'Interrupcion detectada' formateado",
+      "passed": true,
+      "details": "Mensaje visible al usuario",
+      "location": "dashboard.py:L1824",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.262789"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "main_loop captura Exception (no KeyboardInterrupt)",
+      "passed": true,
+      "details": "Exception general capturada para errores internos",
+      "location": "dashboard.py:L1815",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:00.266747"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "Rich Prompt.ask es un classmethod",
+      "passed": true,
+      "details": "Prompt.ask disponible",
+      "location": "rich/prompt.py",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:00.293400"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "menu_agregar() dentro del try de main_loop",
+      "passed": true,
+      "details": "try@1988, menu_agregar@2043, except@3002",
+      "location": "dashboard.py:L1792-1815",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.300258"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "menu_agregar protegido por exception handler",
+      "passed": true,
+      "details": "Posicion relativa OK",
+      "location": "dashboard.py:L1792-1815",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.302147"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "menu_gestionar protegido por exception handler",
+      "passed": true,
+      "details": "Posicion relativa OK",
+      "location": "dashboard.py:L1792-1815",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.306809"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "menu_active_recall protegido por exception handler",
+      "passed": true,
+      "details": "Posicion relativa OK",
+      "location": "dashboard.py:L1792-1815",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.314806"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "menu_estadisticas protegido por exception handler",
+      "passed": true,
+      "details": "Posicion relativa OK",
+      "location": "dashboard.py:L1792-1815",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.318320"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "menu_agregar opcion 1: Prompt.ask para ruta",
+      "passed": true,
+      "details": "Prompt visible para ruta de archivo",
+      "location": "dashboard.py:L183",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:00.329823"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "menu_agregar opcion 1: try/except en ingesta",
+      "passed": false,
+      "details": "try:False, except:False",
+      "location": "dashboard.py:L188-193",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.337552"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "Validacion ruta vacia en menu_agregar",
+      "passed": true,
+      "details": "Guard contra ruta vacia implementado",
+      "location": "dashboard.py:L184-187",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.339749"
+    },
+    {
+      "section": "7. Ctrl+C",
+      "component": "Ctrl+C:Code",
+      "test": "Validacion URL vacia en menu_agregar",
+      "passed": true,
+      "details": "Guard contra URL vacia implementado",
+      "location": "dashboard.py:L237-240",
+      "severity": "critical",
+      "timestamp": "2026-03-01T10:05:00.347960"
+    },
+    {
+      "section": "8. Agentes IA",
+      "component": "AgentIA",
+      "test": "study_agent mockup",
+      "passed": true,
+      "details": "Cards: 1",
+      "location": "study_agent.py",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:00.359872"
+    },
+    {
+      "section": "8. Agentes IA",
+      "component": "AgentIA",
+      "test": "summary_agent",
+      "passed": true,
+      "details": "Resumen: 913 chars",
+      "location": "summary_agent.py",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:09.355984"
+    },
+    {
+      "section": "8. Agentes IA",
+      "component": "SRS",
+      "test": "SRSEngine.calculate_next_review",
+      "passed": true,
+      "details": "Stability: 3.00",
+      "location": "study_engine.py:L29-58",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:09.357399"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Sin print() con Rich tags (todos usan console.print)",
+      "passed": true,
+      "details": "Verificados 4115 directorios",
+      "location": "",
+      "severity": "deep",
+      "timestamp": "2026-03-01T10:05:12.040509"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Sin bare except en dashboard",
+      "passed": true,
+      "details": "Encontrados: 0",
+      "location": "dashboard.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.050335"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Sin nx_db shadowing",
+      "passed": true,
+      "details": "OK",
+      "location": "dashboard.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.068048"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Logger configurado",
+      "passed": true,
+      "details": "Logger presente",
+      "location": "dashboard.py:L76",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.081906"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en modules/file_manager.py",
+      "passed": true,
+      "details": "",
+      "location": "modules/file_manager.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.098008"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en modules/pipeline_manager.py",
+      "passed": true,
+      "details": "",
+      "location": "modules/pipeline_manager.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.125219"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en modules/pkm_manager.py",
+      "passed": true,
+      "details": "",
+      "location": "modules/pkm_manager.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.135969"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en modules/study_engine.py",
+      "passed": true,
+      "details": "",
+      "location": "modules/study_engine.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.144962"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en modules/web_scraper.py",
+      "passed": true,
+      "details": "",
+      "location": "modules/web_scraper.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.155851"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en modules/youtube_manager.py",
+      "passed": false,
+      "details": "Usa console sin importar",
+      "location": "modules/youtube_manager.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.168051"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en agents/deepseek_agent.py",
+      "passed": true,
+      "details": "",
+      "location": "agents/deepseek_agent.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.195164"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en agents/mutation_agent.py",
+      "passed": true,
+      "details": "",
+      "location": "agents/mutation_agent.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.232125"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en agents/relationship_agent.py",
+      "passed": true,
+      "details": "",
+      "location": "agents/relationship_agent.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.242474"
+    },
+    {
+      "section": "9. Estatico",
+      "component": "Estatico",
+      "test": "Console importado en agents/study_agent.py",
+      "passed": true,
+      "details": "",
+      "location": "agents/study_agent.py",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.250642"
+    },
+    {
+      "section": "10. Integridad",
+      "component": "Integridad",
+      "test": "Cards huerfanas",
+      "passed": true,
+      "details": "Encontradas: 0",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.385780"
+    },
+    {
+      "section": "10. Integridad",
+      "component": "Integridad",
+      "test": "Tags huerfanos",
+      "passed": true,
+      "details": "Encontrados: 0",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.388550"
+    },
+    {
+      "section": "10. Integridad",
+      "component": "Integridad",
+      "test": "Links huerfanos",
+      "passed": true,
+      "details": "Encontrados: 0",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.389431"
+    },
+    {
+      "section": "10. Integridad",
+      "component": "Integridad",
+      "test": "PRAGMA journal_mode=WAL",
+      "passed": true,
+      "details": "Actual: wal",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.391619"
+    },
+    {
+      "section": "10. Integridad",
+      "component": "Integridad",
+      "test": "PRAGMA foreign_keys=ON",
+      "passed": true,
+      "details": "Actual: 1",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.392826"
+    },
+    {
+      "section": "10. Integridad",
+      "component": "Integridad",
+      "test": "Conteos",
+      "passed": true,
+      "details": "Registry:19957 Tags:792 Cards:217 Links:5",
+      "location": "",
+      "severity": "normal",
+      "timestamp": "2026-03-01T10:05:12.394234"
+    }
+  ]
+}

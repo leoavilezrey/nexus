@@ -463,3 +463,17 @@ Al intentar extraer una URL nativa de YouTube (ej. `_BteEJkp4bc`), la librería 
 3. **Invocación Universal de Archivos (`open_source_material`):**
    - Anteriormente, presionar "Abrir Archivo" si era una nota solo pintaba un texto crudo de la pantalla que se volvía inmanejable y estorbaba visualmente, sin abrir el archivo real si lo hubiera.
    - Ahora, el motor succiona el String de la Base de Datos (`path_url`) e interpreta automáticamente qué hacer: Si es `"http"`, abrirá Google Chrome. Si es un archivo físico (PDF, Text), usará la librería `os.startfile(ruta)` obligando al sistema de Windows a disparar la aplicación nativa por defecto.
+
+---
+
+## TAREA 19: Fix de UnicodeEncodeError (Lonely Surrogates)
+
+**Estado:** 🟢 Completado
+**Asignado a:** Arquitecto / Constructor
+**Fecha:** 2026-03-01
+
+### Descripción del Incidente y Parche de 3 Niveles:
+1. **El Problema:** Al acceder a la Opción 2 del Menú (Explorador Gestión), la aplicación colapsaba completamente (`UnicodeEncodeError: 'utf-8' codec can't encode characters... surrogates not allowed`). Esto se debía a que la terminal estricta de Windows fallaba masivamente al intentar decodificar y dibujar "lonely surrogates" (caracteres Unicode corruptos o mitades de emojis) insertados dinámicamente o codificados en el script mediante la librería `rich`.
+2. **Fix de Entorno (Config Global):** Se forzó a la Terminal de Consola y a `Rich` a renderizar un UTF-8 a prueba de fallas. Se agregó `sys.stdout.reconfigure(encoding='utf-8', errors='replace')` en `dashboard.py` y se inicializó la `Console(force_terminal=True, legacy_windows=False)`.
+3. **Fix de Render (Capa UI):** Se inyectó una función higienizadora `_safe(text)` en `menu_gestionar()`. Cada texto extraído de la BD para la Tabla ahora pasa por `.encode('utf-8', 'replace').decode('utf-8')` antes de chocar con `table.add_row()`. Además, se eliminó un emoji codificado como un literal problemático (`\ud83d\uddc2\ufe0f`) sustituyéndolo por su literal visual 🗂️.
+4. **Fix Preventivo de Ingesta (Capa DB):** A nivel del CORE (`core/database.py`), interceptamos `NexusCRUD.create_registry` y `add_tag`. Todo string crudo entrante (`title`, `content_raw`, `summary`, `tag.value`) ahora se somete al embudo sanitizador `sanitize_db_string` previniendo a futuro que se guarde texto alienígena injertado por web scraping sucio o nombres de archivo defectuosos de C:/.

@@ -1,0 +1,148 @@
+2026-02-25 04:07:02,844 - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-02-25 04:07:02,912 - INFO - Iniciando reprocesamiento de 230 videos.
+2026-02-25 04:07:02,920 - INFO - Procesando ID 6: https://www.youtube.com/watch?v=_BteEJkp4bc
+2026-02-25 04:07:07,803 - INFO - ID 6: Transcripcion recuperada.
+2026-02-25 04:07:07,809 - WARNING - ID 6: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:07:10,815 - INFO - Procesando ID 7: https://www.youtube.com/watch?v=GVf-JZdJjU8
+2026-02-25 04:07:15,583 - INFO - ID 7: Transcripcion recuperada.
+2026-02-25 04:07:15,589 - WARNING - ID 7: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:07:18,596 - INFO - Procesando ID 11405: https://www.youtube.com/watch?v=cfNAIQtNbKY
+2026-02-25 04:07:24,767 - INFO - ID 11405: Transcripcion recuperada.
+2026-02-25 04:07:24,773 - WARNING - ID 11405: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:07:27,779 - INFO - Procesando ID 11406: https://www.youtube.com/watch?v=L8tHDY0ssHI
+2026-02-25 04:07:32,307 - INFO - ID 11406: Transcripcion recuperada.
+2026-02-25 04:07:32,312 - WARNING - ID 11406: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:07:35,356 - INFO - Procesando ID 11407: https://www.youtube.com/watch?v=ox4AcqwjMLA
+2026-02-25 04:07:42,670 - INFO - ID 11407: Transcripcion recuperada.
+2026-02-25 04:07:42,676 - WARNING - ID 11407: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:07:45,684 - INFO - Procesando ID 11408: https://www.youtube.com/watch?v=KjdlImP-oWo
+2026-02-25 04:07:50,604 - ERROR - ID 11408: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:07:53,613 - INFO - Procesando ID 11409: https://www.youtube.com/watch?v=b_JjR0hfrKM
+2026-02-25 04:07:58,244 - INFO - ID 11409: Transcripcion recuperada.
+2026-02-25 04:07:58,250 - WARNING - ID 11409: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:08:01,256 - INFO - Procesando ID 11410: https://www.youtube.com/watch?v=wTllJaCW9nI
+2026-02-25 04:08:05,498 - ERROR - ID 11410: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:08:08,506 - INFO - Procesando ID 11411: https://www.youtube.com/watch?v=V-P1eW_6wEI
+2026-02-25 04:08:13,235 - INFO - ID 11411: Transcripcion recuperada.
+2026-02-25 04:08:13,242 - WARNING - ID 11411: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:08:16,250 - INFO - Procesando ID 11412: https://www.youtube.com/watch?v=C-YcLeANoY4
+2026-02-25 04:08:20,329 - ERROR - ID 11412: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:08:23,337 - INFO - Procesando ID 11413: https://www.youtube.com/watch?v=bWON42qAiyw
+2026-02-25 04:08:28,628 - INFO - ID 11413: Transcripcion recuperada.
+2026-02-25 04:08:28,634 - WARNING - ID 11413: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:08:31,640 - INFO - Procesando ID 11414: https://www.youtube.com/watch?v=ARXT7Of1nwM
+2026-02-25 04:08:36,615 - INFO - ID 11414: Transcripcion recuperada.
+2026-02-25 04:08:36,621 - WARNING - ID 11414: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:08:39,627 - INFO - Procesando ID 11415: https://www.youtube.com/watch?v=2QBBPsILS9w
+2026-02-25 04:08:44,613 - ERROR - ID 11415: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:08:47,619 - INFO - Procesando ID 11416: https://www.youtube.com/watch?v=ssgHZIvyWOg
+2026-02-25 04:08:53,224 - ERROR - ID 11416: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:08:56,230 - INFO - Procesando ID 11417: https://www.youtube.com/watch?v=O8JKBrJM25c
+2026-02-25 04:09:01,045 - INFO - ID 11417: Transcripcion recuperada.
+2026-02-25 04:09:01,051 - WARNING - ID 11417: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:09:04,191 - INFO - Procesando ID 11418: https://www.youtube.com/watch?v=zSxMjljsAUo
+2026-02-25 04:09:08,874 - INFO - ID 11418: Transcripcion recuperada.
+2026-02-25 04:09:08,880 - WARNING - ID 11418: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:09:11,887 - INFO - Procesando ID 11419: https://www.youtube.com/watch?v=avjR1s4ol74
+2026-02-25 04:09:16,447 - ERROR - ID 11419: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:09:19,453 - INFO - Procesando ID 11420: https://www.youtube.com/watch?v=zQ9GiWnlWto
+2026-02-25 04:09:24,462 - INFO - ID 11420: Transcripcion recuperada.
+2026-02-25 04:09:24,468 - WARNING - ID 11420: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:09:27,474 - INFO - Procesando ID 11421: https://www.youtube.com/watch?v=nX_W7e0IPNU
+2026-02-25 04:09:32,424 - INFO - ID 11421: Transcripcion recuperada.
+2026-02-25 04:09:32,430 - WARNING - ID 11421: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:09:35,440 - INFO - Procesando ID 11422: https://www.youtube.com/watch?v=joEUswbZYBc
+2026-02-25 04:09:40,588 - INFO - ID 11422: Transcripcion recuperada.
+2026-02-25 04:09:40,594 - WARNING - ID 11422: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:09:45,030 - INFO - Procesando ID 11423: https://www.youtube.com/watch?v=DtI4vwLb--k
+2026-02-25 04:09:52,131 - INFO - ID 11423: Transcripcion recuperada.
+2026-02-25 04:09:52,137 - WARNING - ID 11423: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:09:55,143 - INFO - Procesando ID 11424: https://www.youtube.com/watch?v=uXjnKA_kjK8
+2026-02-25 04:09:59,825 - ERROR - ID 11424: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:10:02,831 - INFO - Procesando ID 11425: https://www.youtube.com/watch?v=dpgrux34ThQ
+2026-02-25 04:10:07,584 - INFO - ID 11425: Transcripcion recuperada.
+2026-02-25 04:10:07,591 - WARNING - ID 11425: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:10:10,597 - INFO - Procesando ID 11426: https://www.youtube.com/watch?v=3VavnsnPis8
+2026-02-25 04:10:15,636 - INFO - ID 11426: Transcripcion recuperada.
+2026-02-25 04:10:15,643 - WARNING - ID 11426: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:10:18,649 - INFO - Procesando ID 11427: https://www.youtube.com/watch?v=ZeZbwT-62pI
+2026-02-25 04:10:23,246 - INFO - ID 11427: Transcripcion recuperada.
+2026-02-25 04:10:23,252 - WARNING - ID 11427: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:10:26,260 - INFO - Procesando ID 11428: https://www.youtube.com/watch?v=MDgtq3gU41c
+2026-02-25 04:10:31,456 - INFO - ID 11428: Transcripcion recuperada.
+2026-02-25 04:10:31,462 - WARNING - ID 11428: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:10:34,468 - INFO - Procesando ID 11429: https://www.youtube.com/watch?v=QVlG1HZgEZs
+2026-02-25 04:10:39,219 - INFO - ID 11429: Transcripcion recuperada.
+2026-02-25 04:10:39,225 - WARNING - ID 11429: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:10:42,231 - INFO - Procesando ID 11430: https://www.youtube.com/watch?v=dTwut6zQKQI
+2026-02-25 04:10:46,988 - INFO - ID 11430: Transcripcion recuperada.
+2026-02-25 04:10:46,994 - WARNING - ID 11430: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:10:50,001 - INFO - Procesando ID 11431: https://www.youtube.com/watch?v=-hwgvIagOHg
+2026-02-25 04:10:54,846 - INFO - ID 11431: Transcripcion recuperada.
+2026-02-25 04:10:54,850 - WARNING - ID 11431: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:10:57,856 - INFO - Procesando ID 11432: https://www.youtube.com/watch?v=Pe2hrrBDXkA
+2026-02-25 04:11:02,102 - ERROR - ID 11432: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:11:05,108 - INFO - Procesando ID 11433: https://www.youtube.com/watch?v=UfQUNmYLqbA
+2026-02-25 04:11:09,780 - INFO - ID 11433: Transcripcion recuperada.
+2026-02-25 04:11:09,786 - WARNING - ID 11433: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:11:12,792 - INFO - Procesando ID 11434: https://www.youtube.com/watch?v=1_tb0r6PDwU
+2026-02-25 04:11:17,107 - ERROR - ID 11434: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:11:20,113 - INFO - Procesando ID 11435: https://www.youtube.com/watch?v=Phal-sPAunk
+2026-02-25 04:11:26,968 - INFO - ID 11435: Transcripcion recuperada.
+2026-02-25 04:11:26,974 - WARNING - ID 11435: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:11:29,980 - INFO - Procesando ID 11436: https://www.youtube.com/watch?v=8hkfXOW0_3g
+2026-02-25 04:11:34,367 - INFO - ID 11436: Transcripcion recuperada.
+2026-02-25 04:11:34,372 - WARNING - ID 11436: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:11:37,379 - INFO - Procesando ID 11437: https://www.youtube.com/watch?v=i1lflNvoZpk
+2026-02-25 04:11:42,060 - INFO - ID 11437: Transcripcion recuperada.
+2026-02-25 04:11:42,065 - WARNING - ID 11437: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:11:45,072 - INFO - Procesando ID 11438: https://www.youtube.com/watch?v=jTPdFtYISEs
+2026-02-25 04:11:50,408 - INFO - ID 11438: Transcripcion recuperada.
+2026-02-25 04:11:50,414 - WARNING - ID 11438: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:11:53,419 - INFO - Procesando ID 11439: https://www.youtube.com/watch?v=T6Ngo2yFKRY
+2026-02-25 04:11:58,218 - INFO - ID 11439: Transcripcion recuperada.
+2026-02-25 04:11:58,224 - WARNING - ID 11439: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:12:01,230 - INFO - Procesando ID 11440: https://www.youtube.com/watch?v=DlOGdniv-Ms
+2026-02-25 04:12:05,716 - INFO - ID 11440: Transcripcion recuperada.
+2026-02-25 04:12:05,722 - WARNING - ID 11440: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:12:08,728 - INFO - Procesando ID 11441: https://www.youtube.com/watch?v=TTl4dAI--F8
+2026-02-25 04:12:13,414 - INFO - ID 11441: Transcripcion recuperada.
+2026-02-25 04:12:13,420 - WARNING - ID 11441: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:12:16,426 - INFO - Procesando ID 11442: https://www.youtube.com/watch?v=7T8RKhpPZ34
+2026-02-25 04:12:21,106 - ERROR - ID 11442: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:12:24,112 - INFO - Procesando ID 11443: https://www.youtube.com/watch?v=62lQ9W-3Kbk
+2026-02-25 04:12:29,104 - INFO - ID 11443: Transcripcion recuperada.
+2026-02-25 04:12:29,109 - WARNING - ID 11443: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:12:32,116 - INFO - Procesando ID 11444: https://www.youtube.com/watch?v=unfCifz6TDY
+2026-02-25 04:12:36,843 - ERROR - ID 11444: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:12:39,850 - INFO - Procesando ID 11445: https://www.youtube.com/watch?v=v8J62Q84y6g
+2026-02-25 04:12:44,509 - INFO - ID 11445: Transcripcion recuperada.
+2026-02-25 04:12:44,515 - WARNING - ID 11445: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:12:47,521 - INFO - Procesando ID 11446: https://www.youtube.com/watch?v=s3ETTdlP6Bc
+2026-02-25 04:12:52,136 - INFO - ID 11446: Transcripcion recuperada.
+2026-02-25 04:12:52,142 - WARNING - ID 11446: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:12:55,148 - INFO - Procesando ID 11447: https://www.youtube.com/watch?v=NsLF1SrBifc
+2026-02-25 04:12:59,785 - INFO - ID 11447: Transcripcion recuperada.
+2026-02-25 04:12:59,791 - WARNING - ID 11447: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:13:02,797 - INFO - Procesando ID 11448: https://www.youtube.com/watch?v=Vnhclszg05s
+2026-02-25 04:13:07,550 - INFO - ID 11448: Transcripcion recuperada.
+2026-02-25 04:13:07,556 - WARNING - ID 11448: DeepSeek fallo o devolvio vacio.
+2026-02-25 04:13:10,563 - INFO - Procesando ID 11449: https://www.youtube.com/watch?v=LG0aT0nBuoo
+2026-02-25 04:13:15,455 - ERROR - ID 11449: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:13:18,467 - INFO - Procesando ID 11450: https://www.youtube.com/watch?v=MIRd73iKQxQ
+2026-02-25 04:13:23,164 - ERROR - ID 11450: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:13:26,169 - INFO - Procesando ID 11451: https://www.youtube.com/watch?v=7fsFNwM5S1w
+2026-02-25 04:13:30,934 - ERROR - ID 11451: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:13:33,940 - INFO - Procesando ID 11452: https://www.youtube.com/watch?v=_2ZSH8v_9NA
+2026-02-25 04:13:38,503 - ERROR - ID 11452: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:13:41,509 - INFO - Procesando ID 11453: https://www.youtube.com/watch?v=Fc7128jqTnA
+2026-02-25 04:13:46,570 - ERROR - ID 11453: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:13:49,576 - INFO - Procesando ID 11454: https://www.youtube.com/watch?v=QMvCoqQA8oo
+2026-02-25 04:13:54,444 - ERROR - ID 11454: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:13:57,450 - INFO - Procesando ID 11455: https://www.youtube.com/watch?v=sSrwhRgwkF8
+2026-02-25 04:14:02,145 - ERROR - ID 11455: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:14:05,152 - INFO - Procesando ID 11456: https://www.youtube.com/watch?v=F-e6cPd1uHs
+2026-02-25 04:14:10,041 - ERROR - ID 11456: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:14:13,049 - INFO - Procesando ID 11457: https://www.youtube.com/watch?v=bmmu1AnpYcI
+2026-02-25 04:14:18,911 - ERROR - ID 11457: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:14:21,919 - INFO - Procesando ID 11458: https://www.youtube.com/watch?v=kJUJL2vQoZk

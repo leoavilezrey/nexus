@@ -10,7 +10,17 @@ from rich.prompt import Prompt
 # Asumiendo que el script principal establece la raíz del proyecto para importaciones
 from core.database import nx_db, Card, Registry
 
-console = Console()
+from rich.theme import Theme
+
+# Tema de alto contraste para visibilidad absoluta
+custom_theme = Theme({
+    "dim": "bright_white",
+    "cyan": "bright_cyan",
+    "magenta": "yellow",
+    "blue": "bright_blue",
+})
+
+console = Console(theme=custom_theme)
 
 class SRSEngine:
     def __init__(self):
@@ -106,7 +116,7 @@ def open_source_material(registry):
     else:
         console.print("[bold white on red]Este Registro no tiene archivo físico local, Ni un link Web, Ni contenido de texto.[/]")
         
-    Prompt.ask("\n[bold]Presiona Enter para continuar con la sesión...[/]")
+    Prompt.ask("\n[bold]Presiona Enter para continuar con la sesión...[/]", console=console)
 
 def get_due_cards(session, adelantar=False, topic_id=None, shuffled=False, card_limit=None):
     """
@@ -148,7 +158,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
             if session.query(Card).count() == 0:
                 console.print("\n[bold white on red]¡Tu Sistema no tiene Flashcards![/]")
                 console.print("[yellow]Aún no has generado ninguna tarjeta de estudio en toda la base de datos.[/]")
-                console.print("[cyan]Idea:[/] Ve al Menú Explorador (Opción 2), abre un registro con [bold]vID[/bold] y usa el agente de IA para generar un mazo de cartas de ese documento.\n")
+                console.print("[bright_cyan]Idea:[/] Ve al Menú Explorador (Opción 2), abre un registro con [bold]vID[/bold] y usa el agente de IA para generar un mazo de cartas de ese documento.\n")
             else:
                 console.print("\n[yellow]No hay tarjetas pendientes para repasar hoy.[/]")
                 if not adelantar:
@@ -156,7 +166,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
             return
 
         os.system('cls' if os.name == 'nt' else 'clear')
-        console.print(f"[bold magenta]🚀 Iniciando Sesión Active Recall (Pomodoro: {pomodoro_minutes} min)[/]\n")
+        console.print(f"[bold yellow]🚀 Iniciando Sesión Active Recall (Pomodoro: {pomodoro_minutes} min)[/]\n")
         time.sleep(1.5)
 
         total_cards = len(cards)
@@ -178,7 +188,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
             mins, secs = divmod(int(max(0, time_left)), 60)
             
             # Chromatic visual para el tiempo
-            color_time = "cyan" if time_left > 300 else "bold white on red"
+            color_time = "bright_cyan" if time_left > 300 else "bold white on red"
             
             # Obtener contexto
             reg = session.query(Registry).get(card.parent_id)
@@ -193,11 +203,11 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
             # 1. Función Interna para repintar la Cabecera limpidamente y evitar Overlaps
             def draw_header():
                 os.system('cls' if os.name == 'nt' else 'clear') # Hard clear en OS
-                console.print(f"[{color_time}]⏳ Tiempo restante: {mins:02d}:{secs:02d}[/]  |  [bold magenta]🗂️ Tarjeta {idx} de {total_cards}[/]\n")
+                console.print(f"[{color_time}]⏳ Tiempo restante: {mins:02d}:{secs:02d}[/]  |  [bold yellow]🗂️ Tarjeta {idx} de {total_cards}[/]\n")
                 if is_new_topic:
-                    console.print(Panel(f"[bold cyan]Tema de Estudio:[/] {source_title}\n[bold cyan]Ubicación/Enlace:[/] {disp_url}\n[dim](Para navegar hasta esta ubicación, escribe la tecla 'f' en el menú de abajo, o haz Ctrl+Click si la URL es azul)[/dim]", title="📚 Contexto de la Tarjeta", border_style="cyan"))
+                    console.print(Panel(f"[bold bright_cyan]Tema de Estudio:[/] {source_title}\n[bold bright_cyan]Ubicación/Enlace:[/] {disp_url}\n[yellow](Para navegar hasta esta ubicación, escribe la tecla 'f' en el menú de abajo, o haz Ctrl+Click si la URL es azul)[/yellow]", title="📚 Contexto de la Tarjeta", border_style="bright_cyan"))
                 else:
-                    console.print(f"[dim]📚 Repasando:[/] [bold cyan]{source_title}[/]\n")
+                    console.print(f"[white]📚 Repasando:[/] [bold bright_cyan]{source_title}[/]\n")
                 
             draw_header()
             
@@ -208,10 +218,10 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                     pass
                 else:
                     while True:
-                        action = Prompt.ask("\n[yellow]¿Deseas leer el tema fuente ahora? ([bold]f[/] para abrir / [bold]Enter[/] para saltar a la Pregunta)[/]").strip().lower()
+                        action = Prompt.ask("\n[yellow]¿Deseas leer el tema fuente ahora? ([bold]f[/] para abrir / [bold]Enter[/] para saltar a la Pregunta)[/]", console=console).strip().lower()
                         if action == 'f':
                             if reg:
-                                console.print("\n[dim]Abriendo material fuente en segundo plano...[/dim]")
+                                console.print("\n[bright_white]Abriendo material fuente en segundo plano...[/bright_white]")
                                 open_source_material(reg)
                                 draw_header() # Redibujamos cabecera tras volver
                             else:
@@ -236,7 +246,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
             if "cloze" in card_type or "hueco" in card_type:
                 import re
                 display_q = re.sub(r"\{\{c\d+::(.*?)\}\}", "[...]", card.question)
-                console.print(Panel(display_q, title="❓ Rellenar Huecos", border_style="blue"))
+                console.print(Panel(display_q, title="❓ Rellenar Huecos", border_style="bright_blue"))
             
             elif "mcq" in card_type or "opcion multiple" in card_type:
                 try:
@@ -244,17 +254,17 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                     data = json.loads(card.question)
                     prompt_text = data.get("prompt", "Selecciona la opción correcta:")
                     options = data.get("options", {})
-                    console.print(Panel(prompt_text, title="❓ Opción Múltiple", border_style="blue"))
+                    console.print(Panel(prompt_text, title="❓ Opción Múltiple", border_style="bright_blue"))
                     for k, v in options.items():
-                        console.print(f"  [bold cyan]{k})[/] {v}")
+                        console.print(f"  [bold yellow]{k})[/] {v}")
                     auto_graded = True
                 except:
                     console.print(Panel(card.question, title="❓ Opción Múltiple (Formato Simple)", border_style="blue"))
             
             elif "tf" in card_type or "verdadero" in card_type:
-                console.print(Panel(card.question, title="❓ ¿Verdadero o Falso?", border_style="blue"))
-                console.print("  [bold cyan]v)[/] Verdadero")
-                console.print("  [bold cyan]f[/]) Falso")
+                console.print(Panel(card.question, title="❓ ¿Verdadero o Falso?", border_style="bright_blue"))
+                console.print("  [bold bright_cyan]v)[/] Verdadero")
+                console.print("  [bold bright_cyan]f[/]) Falso")
                 auto_graded = True
 
             elif "matching" in card_type or "emparejar" in card_type:
@@ -267,16 +277,16 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                     import random
                     random.shuffle(right)
                     
-                    console.print(Panel("Empareja los términos de la izquierda con la derecha:", title="❓ Emparejamiento", border_style="blue"))
+                    console.print(Panel("Empareja los términos de la izquierda con la derecha:", title="❓ Emparejamiento", border_style="bright_blue"))
                     for idx, val in enumerate(left, 1):
-                        console.print(f"  {idx}. [bold cyan]{val}[/]  <--->  [bold magenta]{chr(96+idx)})[/] {right[idx-1]}")
+                        console.print(f"  {idx}. [bold bright_cyan]{val}[/]  <--->  [bold yellow]{chr(96+idx)})[/] {right[idx-1]}")
                     auto_graded = True
                 except:
-                    console.print(Panel(card.question, title="❓ Emparejamiento", border_style="blue"))
+                    console.print(Panel(card.question, title="❓ Emparejamiento", border_style="bright_blue"))
 
             else:
                 # Caso por defecto: Factual/Normal
-                console.print(Panel(card.question, title="❓ Pregunta a Resolver", border_style="blue"))
+                console.print(Panel(card.question, title="❓ Pregunta a Resolver", border_style="bright_blue"))
             
             action_start_time = time.time()
             card_needs_grading = True
@@ -286,7 +296,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                 if auto_graded:
                     prompt_msg = "\n[bold yellow]Tu Elección (ej. 'a', 'b' o 'v'):[/]"
                 
-                user_answer = Prompt.ask(prompt_msg)
+                user_answer = Prompt.ask(prompt_msg, console=console)
                 u_ans_lower = user_answer.strip().lower()
 
                 if u_ans_lower in ['salir', 'atras', 'regresar']:
@@ -296,7 +306,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                     break
                 
                 elif u_ans_lower == 'eliminar':
-                    confirm = Prompt.ask("¿Seguro que deseas [bold red]ELIMINAR[/] esta Flashcard permanentemente? (s/n)").strip().lower()
+                    confirm = Prompt.ask("¿Seguro que deseas [bold red]ELIMINAR[/] esta Flashcard permanentemente? (s/n)", console=console).strip().lower()
                     if confirm == 's':
                         session.delete(card)
                         session.commit()
@@ -310,9 +320,9 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                         continue
                 
                 elif u_ans_lower == 'editar':
-                    console.print("\n[bold cyan]--- Modificando Tarjeta ---[/]")
-                    new_q = Prompt.ask("Nueva Pregunta o JSON", default=card.question).strip()
-                    new_a = Prompt.ask("Nueva Respuesta", default=card.answer).strip()
+                    console.print("\n[bold bright_cyan]--- Modificando Tarjeta ---[/]")
+                    new_q = Prompt.ask("Nueva Pregunta o JSON", default=card.question, console=console).strip()
+                    new_a = Prompt.ask("Nueva Respuesta", default=card.answer, console=console).strip()
                     if new_q: card.question = new_q
                     if new_a: card.answer = new_a
                     session.commit()
@@ -335,7 +345,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
             # 4. Mostrar Respuesta y Calificar
             console.print("")
             if user_attempt and user_attempt.strip():
-                console.print(f"[bold blue]Tú escribiste/elegiste:[/] {user_attempt}\n")
+                console.print(f"[bold bright_blue]Tú escribiste/elegiste:[/] {user_attempt}\n")
             
             # Verificación automática
             is_correct = None
@@ -355,7 +365,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
             elif is_correct is False:
                 grade_str = "1" # Malo
             else:
-                grade_str = Prompt.ask("\nCalifica tu nivel de recuerdo:\n [1] [bold red]Malo/Olvidado[/] \n [2] [bold green]Bueno/Correcto[/] \n [3] [bold cyan]Fácil/Perfecto[/]\n Elije un número", choices=["1", "2", "3"], default="2")
+                grade_str = Prompt.ask("\nCalifica tu nivel de recuerdo:\n [1] [bold red]Malo/Olvidado[/] \n [2] [bold green]Bueno/Correcto[/] \n [3] [bold bright_cyan]Fácil/Perfecto[/]\n Elije un número", choices=["1", "2", "3"], default="2", console=console)
             
             agrade = {"1": "Malo (Re-estudio)", "2": "Bueno (Repaso normal)", "3": "Fácil (Salto largo)"}[grade_str]
             grade = int(grade_str)
@@ -403,7 +413,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                 run_m = Prompt.ask(
                     f"\n[bold yellow]🤖 Has alcanzado el límite para el Mutador ({len(pending_cards)} tarjetas acumuladas).\n"
                     "¿Deseas activar el Agente Mutador de IA para analizarlas y reformularlas (rompiendo la memorización sistemática)?[/] (s/n)",
-                    choices=["s", "n"], default="n"
+                    choices=["s", "n"], default="n", console=console
                 ).strip().lower()
                 
                 if run_m == 's':
@@ -419,7 +429,7 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                         json.dump(pending_cards, f)
             else:
                 # Si no llegó a 20, grabamos el progreso para que se acumulen sin molestar aún
-                console.print(f"\n[dim]Se han guardado estas tarjetas para futura mutación de la IA (Total acumulado: {len(pending_cards)}/20).[/dim]")
+                console.print(f"\n[white]Se han guardado estas tarjetas para futura mutación de la IA (Total acumulado: {len(pending_cards)}/20).[/white]")
                 os.makedirs(os.path.dirname(pending_mutations_file), exist_ok=True)
                 with open(pending_mutations_file, 'w', encoding='utf-8') as f:
                     json.dump(pending_cards, f)

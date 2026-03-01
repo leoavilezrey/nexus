@@ -14,6 +14,12 @@ from rich.console import Console
 
 console = Console()
 
+def sanitize_db_string(val):
+    """Limpia lone surrogates antes de guardar en SQLite."""
+    if isinstance(val, str):
+        return val.encode('utf-8', 'replace').decode('utf-8')
+    return val
+
 # ----------------------------------------------------------------------------
 # 1. SQLAlchemy / Database Setup
 # ----------------------------------------------------------------------------
@@ -57,6 +63,7 @@ class Registry(Base):
     title = Column(Text, nullable=True)
     path_url = Column(Text, nullable=True)
     content_raw = Column(Text, nullable=True)
+    summary = Column(Text, nullable=True) # Resumen destilado por IA
     
     # Python atributo será 'meta_info', pero en la base de datos se llama 'metadata'
     # Esto previene choques con 'Base.metadata'
@@ -142,6 +149,7 @@ class RegistryCreate(BaseModel):
     title: Optional[str] = None
     path_url: Optional[str] = None
     content_raw: Optional[str] = None
+    summary: Optional[str] = None
     meta_info: Optional[Dict[str, Any]] = None
     is_flashcard_source: bool = False
 
@@ -179,6 +187,13 @@ class NexusCRUD:
         
     def create_registry(self, data: RegistryCreate) -> Registry:
         """Crea un nuevo registro usando los esquemas de Pydantic."""
+        
+        # Sanitización estricta antes de validaciones y guardado
+        if data.title: data.title = sanitize_db_string(data.title)
+        if data.path_url: data.path_url = sanitize_db_string(data.path_url)
+        if data.content_raw: data.content_raw = sanitize_db_string(data.content_raw)
+        if data.summary: data.summary = sanitize_db_string(data.summary)
+
         with self.Session() as session:
             # Validación: Evitar duplicados por path_url (excepto notas donde path_url puede ser nulo, pero si existe se bloquea)
             if data.path_url:
@@ -202,15 +217,24 @@ class NexusCRUD:
             
     def get_registry(self, registry_id: int) -> Optional[Registry]:
         """Obtiene un registro a partir de su ID."""
+        from sqlalchemy.orm import joinedload
         with self.Session() as session:
             # Devolvemos el registro separado pero cargado
             # (Ten en cuenta que usar las relaciones fuera de sesión puede requerir eager_loading)
-            return session.query(Registry).filter(Registry.id == registry_id).first()
+            reg = session.query(Registry).options(
+                joinedload(Registry.tags)
+            ).filter(Registry.id == registry_id).first()
+            if reg:
+                session.expunge(reg)
+            return reg
             
     def add_tag(self, registry_id: int, tag_data: TagCreate) -> Tag:
         """Añade una única etiqueta al registro."""
+        # Limpieza del valor de la etiqueta
+        clean_value = sanitize_db_string(tag_data.value)
+        
         with self.Session() as session:
-            tag = Tag(registry_id=registry_id, value=tag_data.value)
+            tag = Tag(registry_id=registry_id, value=clean_value)
             session.merge(tag)
             session.commit()
             return tag
@@ -248,6 +272,15 @@ class NexusCRUD:
             deleted = session.query(Registry).filter(Registry.id == registry_id).delete(synchronize_session=False)
             session.commit()
             return deleted > 0
+
+    def update_summary(self, registry_id: int, summary_text: str) -> bool:
+        """Actualiza el resumen de un registro."""
+        with self.Session() as session:
+            rows = session.query(Registry).filter(Registry.id == registry_id).update({
+                Registry.summary: summary_text
+            })
+            session.commit()
+            return rows > 0
 
 # Exportamos la instancia para su uso global si así se requiere
 nx_db = NexusCRUD()

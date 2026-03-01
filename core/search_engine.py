@@ -71,9 +71,13 @@ def search_registry(
         if inc_exts_clean:
             conditions = []
             has_web = False
-            if '__web__' in inc_exts_clean:
+            # Mapeo de conveniencia: Si el usuario escribe 'web' o 'youtube' en el campo de extensión,
+            # lo interpretamos como el tag especial de búsqueda web.
+            web_aliases = {'__web__', 'web', 'youtube', 'yt'}
+            if any(alias in inc_exts_clean for alias in web_aliases):
                 has_web = True
-                inc_exts_clean.remove('__web__')
+                for alias in web_aliases:
+                    if alias in inc_exts_clean: inc_exts_clean.remove(alias)
 
             for ext in inc_exts_clean:
                 ext_no_dot = ext.lstrip('.')
@@ -83,7 +87,8 @@ def search_registry(
                 conditions.append(func.json_extract(Registry.meta_info, '$.extension').ilike(ext_no_dot))
 
             if has_web:
-                conditions.append(Registry.type.in_(['youtube', 'account', 'note', 'app']))
+                # El tag __web__ busca explícitamente recursos que viven en la red o son de plataforma web
+                conditions.append(Registry.type.in_(['youtube', 'web', 'account']))
                 conditions.append(Registry.path_url.ilike("http%"))
 
             if conditions:
@@ -94,9 +99,11 @@ def search_registry(
         if exc_exts_clean:
             conditions = []
             has_web = False
-            if '__web__' in exc_exts_clean:
+            web_aliases = {'__web__', 'web', 'youtube', 'yt'}
+            if any(alias in exc_exts_clean for alias in web_aliases):
                 has_web = True
-                exc_exts_clean.remove('__web__')
+                for alias in web_aliases:
+                    if alias in exc_exts_clean: exc_exts_clean.remove(alias)
 
             for ext in exc_exts_clean:
                 ext_no_dot = ext.lstrip('.')
@@ -105,7 +112,7 @@ def search_registry(
                 conditions.append(func.json_extract(Registry.meta_info, '$.extension').ilike(ext_no_dot))
 
             if has_web:
-                conditions.append(Registry.type.in_(['youtube', 'account']))
+                conditions.append(Registry.type.in_(['youtube', 'web', 'account']))
                 conditions.append(Registry.path_url.ilike("http%"))
 
             if conditions:
@@ -193,3 +200,61 @@ def search_registry(
         pydantic_results.append(rr)
 
     return pydantic_results
+
+def parse_query_string(query_str: str) -> dict:
+    """
+    Parses a smart query string into a dict of filters for search_registry.
+    Example: 'python t:docs e:pdf -t:old i:1-50'
+    - Default/No prefix: inc_name
+    - t: Tag to include
+    - -t: Tag to exclude
+    - e: Extension to include
+    - -e: Extension to exclude
+    - i: IDs or ID range
+    - s: Source (s:y, s:n)
+    """
+    filters = {
+        'inc_name': [], 'exc_name': [], 
+        'inc_tags': [], 'exc_tags': [],
+        'inc_exts': [], 'exc_exts': [],
+        'inc_ids': "", 'is_source': "",
+        'has_info': ""
+    }
+    
+    parts = query_str.split()
+    for p in parts:
+        if p.startswith('t:'):
+            filters['inc_tags'].append(p[2:])
+        elif p.startswith('-t:'):
+            filters['exc_tags'].append(p[3:])
+        elif p.startswith('e:'):
+            filters['inc_exts'].append(p[2:])
+        elif p.startswith('-e:'):
+            filters['exc_exts'].append(p[3:])
+        elif p.startswith('i:'):
+            filters['inc_ids'] = p[2:]
+        elif p.startswith('s:'):
+            val = p[2:].lower()
+            if val in ['s', 'y', '1', 'true']: filters['is_source'] = 's'
+            elif val in ['n', '0', 'false']: filters['is_source'] = 'n'
+        elif p.startswith('h:'):
+            val = p[2:].lower()
+            if val in ['s', 'y', '1', 'true']: filters['has_info'] = 's'
+            elif val in ['n', '0', 'false']: filters['has_info'] = 'n'
+            else: filters['has_info'] = val
+        elif p.startswith('-'):
+            filters['exc_name'].append(p[1:])
+        else:
+            filters['inc_name'].append(p)
+            
+    return {
+        'inc_name': ",".join(filters['inc_name']),
+        'exc_name': ",".join(filters['exc_name']),
+        'inc_tags': ",".join(filters['inc_tags']),
+        'exc_tags': ",".join(filters['exc_tags']),
+        'inc_exts': ",".join(filters['inc_exts']),
+        'exc_exts': ",".join(filters['exc_exts']),
+        'inc_ids': filters['inc_ids'],
+        'is_source': filters['is_source'],
+        'has_info': filters['has_info']
+    }

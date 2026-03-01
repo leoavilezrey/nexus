@@ -1,0 +1,560 @@
+NEXUS COLD RUN DIAGNOSTIC — 2026-02-28T20:49:56.088895
+======================================================================
+
+======================================================================
+SECCIÓN 1: VERIFICACIÓN DE IMPORTS Y DEPENDENCIAS
+======================================================================
+✅ PASS | Imports | import core.database | 
+✅ PASS | Imports | import core.models | 
+✅ PASS | Imports | import core.search_engine | 
+✅ PASS | Imports | import core.staging_db | 
+✅ PASS | Imports | import modules.analytics | 
+✅ PASS | Imports | import modules.file_manager | 
+✅ PASS | Imports | import modules.web_scraper | 
+✅ PASS | Imports | import modules.pkm_manager | 
+✅ PASS | Imports | import modules.exporter | 
+✅ PASS | Imports | import modules.study_engine | 
+✅ PASS | Imports | import modules.pipeline_manager | 
+✅ PASS | Imports | import modules.youtube_manager | 
+✅ PASS | Imports | import agents.study_agent | 
+✅ PASS | Imports | import agents.summary_agent | 
+✅ PASS | Imports | import agents.relationship_agent | 
+✅ PASS | Imports | import agents.deepseek_agent | 
+✅ PASS | Imports | import ui.dashboard (funciones) | 
+✅ PASS | Deps | pip package: sqlalchemy | 
+✅ PASS | Deps | pip package: pydantic | 
+✅ PASS | Deps | pip package: rich | 
+✅ PASS | Deps | pip package: dotenv | 
+✅ PASS | Deps | pip package: requests | 
+✅ PASS | Deps | pip package: bs4 | 
+✅ PASS | Deps | pip package: yt_dlp | 
+
+======================================================================
+SECCIÓN 2: VERIFICACIÓN DE BASE DE DATOS
+======================================================================
+✅ PASS | Database | nexus.db existe | C:\Users\DELL\Proyectos\nexus\nexus.db
+✅ PASS | Database | Conexión SQLite | 
+✅ PASS | Database | Tablas esperadas presentes | Todas presentes: {'cards', 'registry', 'nexus_links', 'tags'}
+✅ PASS | Database | Registros en registry | Total: 19949
+✅ PASS | Database | Tags en tags | Total: 782
+✅ PASS | Database | Cards en cards | Total: 211
+✅ PASS | Database | Links en nexus_links | Total: 4
+✅ PASS | Database | Cards huérfanas | Encontradas: 0
+✅ PASS | Database | Tags huérfanos | Encontrados: 0
+✅ PASS | Database | Links huérfanos | Encontrados: 0
+✅ PASS | Database | PRAGMA journal_mode=WAL | Actual: wal
+✅ PASS | Database | PRAGMA foreign_keys=ON | Actual: 1
+
+======================================================================
+SECCIÓN 3: VERIFICACIÓN DE OPERACIONES CRUD
+======================================================================
+✅ PASS | CRUD | create_registry() | ID creado: 23799
+✅ PASS | CRUD | get_registry() | Título: __COLD_RUN_TEST__
+✅ PASS | CRUD | add_tag() | 
+✅ PASS | CRUD | create_card() | Card ID: 219
+✅ PASS | CRUD | update_summary() | Resultado: True
+✅ PASS | CRUD | delete_registry() | Eliminado: True
+
+======================================================================
+SECCIÓN 4: MOTOR DE BÚSQUEDA
+======================================================================
+✅ PASS | Search | search_registry() sin filtros | Resultados: 5
+✅ PASS | Search | parse_query_string() | Parsed: {'inc_name': 'python', 'exc_name': '', 'inc_tags': 'docs', 'exc_tags': 'old', 'inc_exts': 'pdf', 'exc_exts': '', 'inc_ids': '1-50', 'is_source': '', 'has_info': ''}
+✅ PASS | Search | search_registry() con filtro tag | Resultados: 5
+
+======================================================================
+SECCIÓN 5: ANALYTICS MODULE
+======================================================================
+✅ PASS | Analytics | get_global_metrics() | Keys: ['registry_counts', 'network', 'srs'], Total registros: 19949
+✅ PASS | Analytics | Estructura de métricas | Esperadas: {'registry_counts', 'srs', 'network'}, Presentes: {'registry_counts', 'srs', 'network'}
+
+======================================================================
+SECCIÓN 6: STAGING DB (Google Drive Buffer)
+======================================================================
+✅ PASS | Staging | staging_engine inicializado | Path: G:\Mi unidad\Nexus_Staging\staging_buffer.db
+✅ PASS | Staging | Google Drive (G:) montado | G:\Mi unidad accesible
+✅ PASS | Staging | init_staging() | 
+
+======================================================================
+SECCIÓN 7: AGENTES IA (NO se consume tokens)
+======================================================================
+✅ PASS | Agents | GOOGLE_API_KEY configurada | Clave presente
+✅ PASS | Agents | DEEPSEEK_API_KEY configurada | Clave presente
+✅ PASS | Agents | generate_deck_from_registry(mockup=True) | Cards generadas: 1
+
+======================================================================
+SECCIÓN 8: ANÁLISIS ESTÁTICO — PATRONES DE ERROR
+======================================================================
+✅ PASS | Static | Import local de nx_db en menu_agregar opción 4 | No se detectó import local conflictivo
+✅ PASS | Static | content_raw None-checks | 
+✅ PASS | Static | Bare except: clauses | Encontrados: 0 — Deben capturar excepciones específicas
+✅ PASS | Static | msvcrt import | Correcto en Windows o condicional
+
+======================================================================
+SECCIÓN 9: ARCHIVOS Y RUTAS DEL SISTEMA
+======================================================================
+✅ PASS | Files | main.py | Size: 700 bytes
+✅ PASS | Files | core/database.py | Size: 11,315 bytes
+✅ PASS | Files | core/models.py | Size: 2,360 bytes
+✅ PASS | Files | core/search_engine.py | Size: 10,677 bytes
+✅ PASS | Files | ui/dashboard.py | Size: 101,963 bytes
+✅ PASS | Files | modules/analytics.py | Size: 2,717 bytes
+✅ PASS | Files | .env | Size: 187 bytes
+✅ PASS | Files | requirements.txt | Size: 1,496 bytes
+
+======================================================================
+SECCIÓN 10: WEB SERVER (FastAPI)
+======================================================================
+✅ PASS | WebServer | FastAPI app importable | 
+✅ PASS | WebServer | Ruta / | Registrada
+✅ PASS | WebServer | Ruta /api/records | Registrada
+✅ PASS | WebServer | Ruta /api/stats | Registrada
+✅ PASS | WebServer | Ruta /api/recall/cards | Registrada
+
+======================================================================
+SECCIÓN 11: ANÁLISIS DE NEXUS.LOG HISTÓRICO
+======================================================================
+✅ PASS | Logs | Errores en nexus.log | Errores: 0, Warnings: 0
+
+══════════════════════════════════════════════════════════════════════
+RESUMEN EJECUTIVO DEL DIAGNÓSTICO EN FRÍO
+══════════════════════════════════════════════════════════════════════
+Total de tests ejecutados: 71
+✅ Pasados: 71
+❌ Fallidos: 0
+Tasa de éxito: 100.0%
+
+Log completo guardado en: C:\Users\DELL\Proyectos\nexus\logs\cold_run_diagnostic.log
+
+
+======================================================================
+RESULTADOS JSON:
+======================================================================
+[
+  {
+    "component": "Imports",
+    "test": "import core.database",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import core.models",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import core.search_engine",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import core.staging_db",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import modules.analytics",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import modules.file_manager",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import modules.web_scraper",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import modules.pkm_manager",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import modules.exporter",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import modules.study_engine",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import modules.pipeline_manager",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import modules.youtube_manager",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import agents.study_agent",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import agents.summary_agent",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import agents.relationship_agent",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import agents.deepseek_agent",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Imports",
+    "test": "import ui.dashboard (funciones)",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Deps",
+    "test": "pip package: sqlalchemy",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Deps",
+    "test": "pip package: pydantic",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Deps",
+    "test": "pip package: rich",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Deps",
+    "test": "pip package: dotenv",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Deps",
+    "test": "pip package: requests",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Deps",
+    "test": "pip package: bs4",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Deps",
+    "test": "pip package: yt_dlp",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Database",
+    "test": "nexus.db existe",
+    "passed": true,
+    "details": "C:\\Users\\DELL\\Proyectos\\nexus\\nexus.db"
+  },
+  {
+    "component": "Database",
+    "test": "Conexión SQLite",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Database",
+    "test": "Tablas esperadas presentes",
+    "passed": true,
+    "details": "Todas presentes: {'cards', 'registry', 'nexus_links', 'tags'}"
+  },
+  {
+    "component": "Database",
+    "test": "Registros en registry",
+    "passed": true,
+    "details": "Total: 19949"
+  },
+  {
+    "component": "Database",
+    "test": "Tags en tags",
+    "passed": true,
+    "details": "Total: 782"
+  },
+  {
+    "component": "Database",
+    "test": "Cards en cards",
+    "passed": true,
+    "details": "Total: 211"
+  },
+  {
+    "component": "Database",
+    "test": "Links en nexus_links",
+    "passed": true,
+    "details": "Total: 4"
+  },
+  {
+    "component": "Database",
+    "test": "Cards huérfanas",
+    "passed": true,
+    "details": "Encontradas: 0"
+  },
+  {
+    "component": "Database",
+    "test": "Tags huérfanos",
+    "passed": true,
+    "details": "Encontrados: 0"
+  },
+  {
+    "component": "Database",
+    "test": "Links huérfanos",
+    "passed": true,
+    "details": "Encontrados: 0"
+  },
+  {
+    "component": "Database",
+    "test": "PRAGMA journal_mode=WAL",
+    "passed": true,
+    "details": "Actual: wal"
+  },
+  {
+    "component": "Database",
+    "test": "PRAGMA foreign_keys=ON",
+    "passed": true,
+    "details": "Actual: 1"
+  },
+  {
+    "component": "CRUD",
+    "test": "create_registry()",
+    "passed": true,
+    "details": "ID creado: 23799"
+  },
+  {
+    "component": "CRUD",
+    "test": "get_registry()",
+    "passed": true,
+    "details": "Título: __COLD_RUN_TEST__"
+  },
+  {
+    "component": "CRUD",
+    "test": "add_tag()",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "CRUD",
+    "test": "create_card()",
+    "passed": true,
+    "details": "Card ID: 219"
+  },
+  {
+    "component": "CRUD",
+    "test": "update_summary()",
+    "passed": true,
+    "details": "Resultado: True"
+  },
+  {
+    "component": "CRUD",
+    "test": "delete_registry()",
+    "passed": true,
+    "details": "Eliminado: True"
+  },
+  {
+    "component": "Search",
+    "test": "search_registry() sin filtros",
+    "passed": true,
+    "details": "Resultados: 5"
+  },
+  {
+    "component": "Search",
+    "test": "parse_query_string()",
+    "passed": true,
+    "details": "Parsed: {'inc_name': 'python', 'exc_name': '', 'inc_tags': 'docs', 'exc_tags': 'old', 'inc_exts': 'pdf', 'exc_exts': '', 'inc_ids': '1-50', 'is_source': '', 'has_info': ''}"
+  },
+  {
+    "component": "Search",
+    "test": "search_registry() con filtro tag",
+    "passed": true,
+    "details": "Resultados: 5"
+  },
+  {
+    "component": "Analytics",
+    "test": "get_global_metrics()",
+    "passed": true,
+    "details": "Keys: ['registry_counts', 'network', 'srs'], Total registros: 19949"
+  },
+  {
+    "component": "Analytics",
+    "test": "Estructura de métricas",
+    "passed": true,
+    "details": "Esperadas: {'registry_counts', 'srs', 'network'}, Presentes: {'registry_counts', 'srs', 'network'}"
+  },
+  {
+    "component": "Staging",
+    "test": "staging_engine inicializado",
+    "passed": true,
+    "details": "Path: G:\\Mi unidad\\Nexus_Staging\\staging_buffer.db"
+  },
+  {
+    "component": "Staging",
+    "test": "Google Drive (G:) montado",
+    "passed": true,
+    "details": "G:\\Mi unidad accesible"
+  },
+  {
+    "component": "Staging",
+    "test": "init_staging()",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Agents",
+    "test": "GOOGLE_API_KEY configurada",
+    "passed": true,
+    "details": "Clave presente"
+  },
+  {
+    "component": "Agents",
+    "test": "DEEPSEEK_API_KEY configurada",
+    "passed": true,
+    "details": "Clave presente"
+  },
+  {
+    "component": "Agents",
+    "test": "generate_deck_from_registry(mockup=True)",
+    "passed": true,
+    "details": "Cards generadas: 1"
+  },
+  {
+    "component": "Static",
+    "test": "Import local de nx_db en menu_agregar opción 4",
+    "passed": true,
+    "details": "No se detectó import local conflictivo"
+  },
+  {
+    "component": "Static",
+    "test": "content_raw None-checks",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "Static",
+    "test": "Bare except: clauses",
+    "passed": true,
+    "details": "Encontrados: 0 — Deben capturar excepciones específicas"
+  },
+  {
+    "component": "Static",
+    "test": "msvcrt import",
+    "passed": true,
+    "details": "Correcto en Windows o condicional"
+  },
+  {
+    "component": "Files",
+    "test": "main.py",
+    "passed": true,
+    "details": "Size: 700 bytes"
+  },
+  {
+    "component": "Files",
+    "test": "core/database.py",
+    "passed": true,
+    "details": "Size: 11,315 bytes"
+  },
+  {
+    "component": "Files",
+    "test": "core/models.py",
+    "passed": true,
+    "details": "Size: 2,360 bytes"
+  },
+  {
+    "component": "Files",
+    "test": "core/search_engine.py",
+    "passed": true,
+    "details": "Size: 10,677 bytes"
+  },
+  {
+    "component": "Files",
+    "test": "ui/dashboard.py",
+    "passed": true,
+    "details": "Size: 101,963 bytes"
+  },
+  {
+    "component": "Files",
+    "test": "modules/analytics.py",
+    "passed": true,
+    "details": "Size: 2,717 bytes"
+  },
+  {
+    "component": "Files",
+    "test": ".env",
+    "passed": true,
+    "details": "Size: 187 bytes"
+  },
+  {
+    "component": "Files",
+    "test": "requirements.txt",
+    "passed": true,
+    "details": "Size: 1,496 bytes"
+  },
+  {
+    "component": "WebServer",
+    "test": "FastAPI app importable",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "component": "WebServer",
+    "test": "Ruta /",
+    "passed": true,
+    "details": "Registrada"
+  },
+  {
+    "component": "WebServer",
+    "test": "Ruta /api/records",
+    "passed": true,
+    "details": "Registrada"
+  },
+  {
+    "component": "WebServer",
+    "test": "Ruta /api/stats",
+    "passed": true,
+    "details": "Registrada"
+  },
+  {
+    "component": "WebServer",
+    "test": "Ruta /api/recall/cards",
+    "passed": true,
+    "details": "Registrada"
+  },
+  {
+    "component": "Logs",
+    "test": "Errores en nexus.log",
+    "passed": true,
+    "details": "Errores: 0, Warnings: 0"
+  }
+]

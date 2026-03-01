@@ -1,0 +1,497 @@
+{
+  "timestamp": "2026-02-28T20:50:01.413327",
+  "total": 61,
+  "passed": 61,
+  "failed": 0,
+  "rate": 100.0,
+  "results": [
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Dashboard",
+      "test": "Import funciones principales",
+      "passed": true,
+      "details": "main_loop, menu_agregar, menu_gestionar, menu_active_recall, menu_estadisticas, menu_conectar",
+      "location": "ui/dashboard.py líneas 128-1810"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Core",
+      "test": "Import database completo",
+      "passed": true,
+      "details": "",
+      "location": "core/database.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Core",
+      "test": "Import search_engine",
+      "passed": true,
+      "details": "",
+      "location": "core/search_engine.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Core",
+      "test": "Import staging_db",
+      "passed": true,
+      "details": "",
+      "location": "core/staging_db.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Modules",
+      "test": "Import analytics",
+      "passed": true,
+      "details": "",
+      "location": "modules/analytics.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Modules",
+      "test": "Import file_manager",
+      "passed": true,
+      "details": "",
+      "location": "modules/file_manager.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Modules",
+      "test": "Import web_scraper",
+      "passed": true,
+      "details": "",
+      "location": "modules/web_scraper.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Modules",
+      "test": "Import pkm_manager",
+      "passed": true,
+      "details": "",
+      "location": "modules/pkm_manager.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Modules",
+      "test": "Import study_engine",
+      "passed": true,
+      "details": "",
+      "location": "modules/study_engine.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Modules",
+      "test": "Import exporter",
+      "passed": true,
+      "details": "",
+      "location": "modules/exporter.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Modules",
+      "test": "Import pipeline_manager",
+      "passed": true,
+      "details": "",
+      "location": "modules/pipeline_manager.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Agents",
+      "test": "Import agentes IA principales",
+      "passed": true,
+      "details": "study, summary, relationship, deepseek",
+      "location": "agents/*.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "Agents",
+      "test": "Import mutation_agent",
+      "passed": true,
+      "details": "",
+      "location": "agents/mutation_agent.py"
+    },
+    {
+      "section": "1. Imports del Dashboard",
+      "component": "WebServer",
+      "test": "Import FastAPI app",
+      "passed": true,
+      "details": "",
+      "location": "web_server.py"
+    },
+    {
+      "section": "2. Componentes Visuales",
+      "component": "Visual",
+      "test": "show_header()",
+      "passed": true,
+      "details": "Banner renderizado sin errores",
+      "location": "ui/dashboard.py:85-93"
+    },
+    {
+      "section": "2. Componentes Visuales",
+      "component": "Visual",
+      "test": "get_stats_panel()",
+      "passed": true,
+      "details": "Panel tipo: Panel",
+      "location": "ui/dashboard.py:95-121"
+    },
+    {
+      "section": "2. Componentes Visuales",
+      "component": "Visual",
+      "test": "get_stats_panel(con filtros)",
+      "passed": true,
+      "details": "",
+      "location": "ui/dashboard.py:95-121"
+    },
+    {
+      "section": "3. Base de Datos y CRUD",
+      "component": "CRUD",
+      "test": "create_registry(note)",
+      "passed": true,
+      "details": "ID: 23799",
+      "location": "core/database.py:178-200"
+    },
+    {
+      "section": "3. Base de Datos y CRUD",
+      "component": "CRUD",
+      "test": "create_registry(note #2)",
+      "passed": true,
+      "details": "ID: 23800",
+      "location": "core/database.py:178-200"
+    },
+    {
+      "section": "3. Base de Datos y CRUD",
+      "component": "CRUD",
+      "test": "add_tag() x2",
+      "passed": true,
+      "details": "Tags: ui_test, automated",
+      "location": "core/database.py:210-216"
+    },
+    {
+      "section": "3. Base de Datos y CRUD",
+      "component": "CRUD",
+      "test": "create_card()",
+      "passed": true,
+      "details": "Card ID: 219",
+      "location": "core/database.py:225-233"
+    },
+    {
+      "section": "3. Base de Datos y CRUD",
+      "component": "CRUD",
+      "test": "create_link()",
+      "passed": true,
+      "details": "Link ID: 5",
+      "location": "core/database.py:218-224"
+    },
+    {
+      "section": "3. Base de Datos y CRUD",
+      "component": "CRUD",
+      "test": "update_summary()",
+      "passed": true,
+      "details": "Resultado: True",
+      "location": "core/database.py:250-256"
+    },
+    {
+      "section": "3. Base de Datos y CRUD",
+      "component": "CRUD",
+      "test": "get_registry() + verify fields",
+      "passed": true,
+      "details": "Title OK, Summary OK, ID=23799",
+      "location": "core/database.py:202-208"
+    },
+    {
+      "section": "4. Motor de Búsqueda",
+      "component": "Search",
+      "test": "search_registry() sin filtros",
+      "passed": true,
+      "details": "Resultados: 5",
+      "location": "core/search_engine.py:8-202"
+    },
+    {
+      "section": "4. Motor de Búsqueda",
+      "component": "Search",
+      "test": "Filtro inc_name_path",
+      "passed": true,
+      "details": "Resultados para '__UI_TEST': 2",
+      "location": "core/search_engine.py:36-43"
+    },
+    {
+      "section": "4. Motor de Búsqueda",
+      "component": "Search",
+      "test": "Filtro inc_tags",
+      "passed": true,
+      "details": "Resultados para tag 'ui_test': 1",
+      "location": "core/search_engine.py:58-61"
+    },
+    {
+      "section": "4. Motor de Búsqueda",
+      "component": "Search",
+      "test": "Filtro exc_tags",
+      "passed": true,
+      "details": "Exclusión tag 'ui_test': 1 resultados",
+      "location": "core/search_engine.py:63-66"
+    },
+    {
+      "section": "4. Motor de Búsqueda",
+      "component": "Search",
+      "test": "Filtro inc_extensions (web)",
+      "passed": true,
+      "details": "Resultados web: 5",
+      "location": "core/search_engine.py:68-95"
+    },
+    {
+      "section": "4. Motor de Búsqueda",
+      "component": "Search",
+      "test": "Filtro record_ids_str (rango)",
+      "passed": true,
+      "details": "IDs 1-5: 3 resultados",
+      "location": "core/search_engine.py:143-159"
+    },
+    {
+      "section": "4. Motor de Búsqueda",
+      "component": "Search",
+      "test": "Filtro is_flashcard_source=s",
+      "passed": true,
+      "details": "Con flashcards: 5",
+      "location": "core/search_engine.py:162-176"
+    },
+    {
+      "section": "4. Motor de Búsqueda",
+      "component": "Search",
+      "test": "parse_query_string()",
+      "passed": true,
+      "details": "Keys: ['inc_name', 'exc_name', 'inc_tags', 'exc_tags', 'inc_exts', 'exc_exts', 'inc_ids', 'is_source', 'has_info']",
+      "location": "core/search_engine.py:204-254"
+    },
+    {
+      "section": "5. Analytics",
+      "component": "Analytics",
+      "test": "get_global_metrics() estructura",
+      "passed": true,
+      "details": "Total registros: 19951",
+      "location": "modules/analytics.py:6-65"
+    },
+    {
+      "section": "5. Analytics",
+      "component": "Analytics",
+      "test": "Métricas SRS válidas",
+      "passed": true,
+      "details": "Cards: 212, Due: 188, Diff: 3.8",
+      "location": "modules/analytics.py:40-58"
+    },
+    {
+      "section": "5. Analytics",
+      "component": "Analytics",
+      "test": "Métricas de red",
+      "passed": true,
+      "details": "Links: 5, Tags únicos: 130",
+      "location": "modules/analytics.py:30-34"
+    },
+    {
+      "section": "6. Staging DB",
+      "component": "Staging",
+      "test": "staging_engine disponible",
+      "passed": true,
+      "details": "Engine activo",
+      "location": "core/staging_db.py:17-24"
+    },
+    {
+      "section": "6. Staging DB",
+      "component": "Staging",
+      "test": "get_current_db('local')",
+      "passed": true,
+      "details": "Retorna nx_db correctamente",
+      "location": "core/staging_db.py:58-66"
+    },
+    {
+      "section": "6. Staging DB",
+      "component": "Staging",
+      "test": "get_current_db('staging')",
+      "passed": true,
+      "details": "Retorna staging_db",
+      "location": "core/staging_db.py:58-66"
+    },
+    {
+      "section": "6. Staging DB",
+      "component": "Staging",
+      "test": "_check_available() guard",
+      "passed": true,
+      "details": "Método presente en StagingCRUD",
+      "location": "core/staging_db.py:52-56"
+    },
+    {
+      "section": "7. Agentes IA",
+      "component": "AgentIA",
+      "test": "study_agent mockup mode",
+      "passed": true,
+      "details": "Cards generadas: 1",
+      "location": "agents/study_agent.py"
+    },
+    {
+      "section": "7. Agentes IA",
+      "component": "AgentIA",
+      "test": "summary_agent",
+      "passed": true,
+      "details": "Resumen OK (457 chars)",
+      "location": "agents/summary_agent.py"
+    },
+    {
+      "section": "7. Agentes IA",
+      "component": "SRS",
+      "test": "SRSEngine.calculate_next_review()",
+      "passed": true,
+      "details": "Stability: 3.0, Next: 2026-03-04 00:50:01.046578+00:00",
+      "location": "modules/study_engine.py:29-58"
+    },
+    {
+      "section": "7. Agentes IA",
+      "component": "SRS",
+      "test": "get_due_cards()",
+      "passed": true,
+      "details": "Cards pendientes: 188",
+      "location": "modules/study_engine.py:121-144"
+    },
+    {
+      "section": "8. Web Server",
+      "component": "WebServer",
+      "test": "Ruta /",
+      "passed": true,
+      "details": "Registrada",
+      "location": "web_server.py"
+    },
+    {
+      "section": "8. Web Server",
+      "component": "WebServer",
+      "test": "Ruta /api/records",
+      "passed": true,
+      "details": "Registrada",
+      "location": "web_server.py"
+    },
+    {
+      "section": "8. Web Server",
+      "component": "WebServer",
+      "test": "Ruta /api/stats",
+      "passed": true,
+      "details": "Registrada",
+      "location": "web_server.py"
+    },
+    {
+      "section": "8. Web Server",
+      "component": "WebServer",
+      "test": "Ruta /api/recall/cards",
+      "passed": true,
+      "details": "Registrada",
+      "location": "web_server.py"
+    },
+    {
+      "section": "9. Análisis Estático",
+      "component": "Static",
+      "test": "Sin shadowing nx_db",
+      "passed": true,
+      "details": "Import local eliminado",
+      "location": "ui/dashboard.py:353"
+    },
+    {
+      "section": "9. Análisis Estático",
+      "component": "Static",
+      "test": "content_raw None-checks",
+      "passed": true,
+      "details": "Todos protegidos",
+      "location": "ui/dashboard.py:259,306"
+    },
+    {
+      "section": "9. Análisis Estático",
+      "component": "Static",
+      "test": "Sin bare except:",
+      "passed": true,
+      "details": "Encontrados: 0",
+      "location": "ui/dashboard.py:51"
+    },
+    {
+      "section": "9. Análisis Estático",
+      "component": "Static",
+      "test": "Rich tags OK en file_manager",
+      "passed": true,
+      "details": "print() con Rich: 0",
+      "location": "modules/file_manager.py"
+    },
+    {
+      "section": "9. Análisis Estático",
+      "component": "Static",
+      "test": "Rich tags OK en pkm_manager",
+      "passed": true,
+      "details": "print() con Rich: 0",
+      "location": "modules/pkm_manager.py"
+    },
+    {
+      "section": "9. Análisis Estático",
+      "component": "Static",
+      "test": "Logger configurado en dashboard",
+      "passed": true,
+      "details": "nexus.ui logger presente",
+      "location": "ui/dashboard.py:76"
+    },
+    {
+      "section": "9. Análisis Estático",
+      "component": "Static",
+      "test": "Exception handler en main_loop",
+      "passed": true,
+      "details": "logger.exception() presente",
+      "location": "ui/dashboard.py:1809"
+    },
+    {
+      "section": "10. Integridad BD",
+      "component": "Integridad",
+      "test": "Cards huérfanas",
+      "passed": true,
+      "details": "Encontradas: 0",
+      "location": "nexus.db → cards"
+    },
+    {
+      "section": "10. Integridad BD",
+      "component": "Integridad",
+      "test": "Tags huérfanos",
+      "passed": true,
+      "details": "Encontrados: 0",
+      "location": "nexus.db → tags"
+    },
+    {
+      "section": "10. Integridad BD",
+      "component": "Integridad",
+      "test": "Links huérfanos",
+      "passed": true,
+      "details": "Encontrados: 0",
+      "location": "nexus.db → nexus_links"
+    },
+    {
+      "section": "10. Integridad BD",
+      "component": "Integridad",
+      "test": "PRAGMA journal_mode=WAL",
+      "passed": true,
+      "details": "Actual: wal",
+      "location": "nexus.db"
+    },
+    {
+      "section": "10. Integridad BD",
+      "component": "Integridad",
+      "test": "PRAGMA foreign_keys=ON",
+      "passed": true,
+      "details": "Actual: 1",
+      "location": "nexus.db"
+    },
+    {
+      "section": "10. Integridad BD",
+      "component": "Integridad",
+      "test": "Conteo de registros",
+      "passed": true,
+      "details": "Registry: 19951, Tags: 784, Cards: 212, Links: 5",
+      "location": "nexus.db"
+    },
+    {
+      "section": "11. Logs",
+      "component": "Logs",
+      "test": "nexus.log limpio",
+      "passed": true,
+      "details": "Errores: 0, Warnings: 0",
+      "location": "nexus.log"
+    }
+  ]
+}

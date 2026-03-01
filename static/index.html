@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Hybrid | Memory OS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@300;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-microchip"></i>
+                <span>NEXUS</span>
+            </div>
+            <nav>
+                <div class="nav-item active" data-view="dashboard">
+                    <i class="fas fa-th-large"></i><span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-view="explorer">
+                    <i class="fas fa-search"></i><span>Explorador</span>
+                </div>
+                <div class="nav-item" data-view="recall">
+                    <i class="fas fa-brain"></i><span>Active Recall</span>
+                </div>
+                <div class="nav-item" data-view="pipeline">
+                    <i class="fas fa-bolt"></i><span>Pipeline</span>
+                </div>
+                <div class="nav-item" data-view="ingesta">
+                    <i class="fas fa-plus-circle"></i><span>Ingesta</span>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="theme-switcher">
+                    <div class="color-dot" style="background:#9d7aff" data-color="#9d7aff" data-cyan="#40f0ff"></div>
+                    <div class="color-dot" style="background:#ff7a9d" data-color="#ff7a9d" data-cyan="#ffb74d"></div>
+                    <div class="color-dot" style="background:#7aff9d" data-color="#7aff9d" data-cyan="#40ffd0"></div>
+                    <div class="color-dot" style="background:#7abdff" data-color="#7abdff" data-cyan="#409fff"></div>
+                </div>
+                <div class="status-indicator">
+                    <span class="dot"></span> Backend Online
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <header>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="omnibar" placeholder="Nexus Omnibar: términio t:etiqueta e:ext...">
+                </div>
+                <div class="user-profile">
+                    <div class="stats">
+                        <span id="total-cards">0 Cards</span>
+                    </div>
+                    <div class="avatar">L</div>
+                </div>
+            </header>
+
+            <section id="main-view" class="view-container">
+                <!-- Dashboard View (Página de Inicio) -->
+                <div id="dashboard-view">
+                    <div class="hero">
+                        <h1>Central <span class="gradient-text">de Inteligencia</span></h1>
+                        <p>Estado actual de tu Cerebro Digital y accesos rápidos.</p>
+                    </div>
+
+                    <!-- Stats Bar -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-total-rec">0</span>
+                            <span class="stat-label">Recursos Totales</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-total-cards">0</span>
+                            <span class="stat-label">Flashcards Listas</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-ai-proc">0</span>
+                            <span class="stat-label">Videos con IA</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-progress">0%</span>
+                            <span class="stat-label">Maestría de Estudio</span>
+                        </div>
+                    </div>
+
+                    <h2 class="section-title">Funciones de Sistema</h2>
+                    <div class="function-grid">
+                        <div class="func-btn" id="btn-goto-explorer">
+                            <i class="fas fa-search"></i>
+                            <div class="func-info">
+                                <h3>Explorador Smart</h3>
+                                <p>Busca en todo tu conocimiento</p>
+                            </div>
+                        </div>
+                        <div class="func-btn" id="btn-goto-recall">
+                            <i class="fas fa-brain"></i>
+                            <div class="func-info">
+                                <h3>Active Recall</h3>
+                                <p>Iniciar sesión de estudio</p>
+                            </div>
+                        </div>
+                        <div class="func-btn" id="btn-goto-pipeline">
+                            <i class="fas fa-bolt"></i>
+                            <div class="func-info">
+                                <h3>YouTube Pipeline</h3>
+                                <p>Gestionar colas y scraping</p>
+                            </div>
+                        </div>
+                        <div class="func-btn" id="btn-goto-ingesta">
+                            <i class="fas fa-plus"></i>
+                            <div class="func-info">
+                                <h3>Ingesta Masiva</h3>
+                                <p>Añadir nuevos archivos o enlaces</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explorer View (Oculto inicialmente) -->
+                <div id="explorer-view" class="hidden">
+                    <div class="sub-header">
+                        <h2>Resultados de Búsqueda</h2>
+                    </div>
+                    <div id="explorer-grid">
+                        <!-- List view will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Recall View -->
+                <div id="recall-view" class="hidden">
+                    <div class="recall-container">
+                        <div class="recall-header">
+                            <h1>Sesión de <span class="gradient-text">Active Recall</span></h1>
+                            <div class="session-progress">
+                                <span id="current-card-index">0</span> / <span id="total-session-cards">0</span>
+                            </div>
+                        </div>
+
+                        <div id="no-cards-msg" class="hidden">
+                            <i class="fas fa-check-circle"></i>
+                            <h2>¡Todo repasado!</h2>
+                            <p>No tienes tarjetas pendientes de revisión para este momento.</p>
+                            <button class="btn-primary" onclick="switchView('dashboard')">Volver al Dashboard</button>
+                        </div>
+
+                        <div id="study-area" class="">
+                            <div class="flip-card" id="main-flashcard">
+                                <div class="flip-card-inner">
+                                    <div class="flip-card-front">
+                                        <div class="card-context" id="card-context-text">Contexto</div>
+                                        <div class="card-question" id="card-q-text">Cargando pregunta...</div>
+                                        <div class="card-hint">Haz clic para ver la respuesta</div>
+                                    </div>
+                                    <div class="flip-card-back">
+                                        <div class="card-answer" id="card-a-text">Respuesta</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="recall-controls hidden" id="recall-actions">
+                                <h3>¿Cómo de difícil fue?</h3>
+                                <div class="rating-buttons">
+                                    <button class="rate-btn" data-quality="0">Olvidado</button>
+                                    <button class="rate-btn" data-quality="1">Difícil</button>
+                                    <button class="rate-btn" data-quality="2">Bien</button>
+                                    <button class="rate-btn" data-quality="3">Fácil</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pipeline View -->
+                <div id="pipeline-view" class="hidden">
+                    <div class="pipeline-container">
+                        <div class="hero">
+                            <h1>Gestión de <span class="gradient-text">Pipeline</span></h1>
+                            <p>Monitor de la cola de procesamiento de YouTube (Cloud Storage).</p>
+                        </div>
+
+                        <div class="pipeline-grid">
+                            <div class="pipeline-card" id="staging-status">
+                                <i class="fas fa-cloud"></i>
+                                <h3>Staging DB (Drive)</h3>
+                                <p id="pipe-conn">Conectando...</p>
+                            </div>
+                            <div class="pipeline-card danger">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3>Bloqueados (IP)</h3>
+                                <p id="pipe-blocked">0</p>
+                            </div>
+                            <div class="pipeline-card success">
+                                <i class="fas fa-check-double"></i>
+                                <h3>Listos para Migrar</h3>
+                                <p id="pipe-ready">0</p>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-info">
+                            <h3>Información de la Cola</h3>
+                            <p>Total de videos pendientes: <strong id="pipe-total">0</strong></p>
+                            <div class="warning-box">
+                                <i class="fas fa-info-circle"></i>
+                                <p>Recuerda que el reprocesamiento de videos bloqueados debe lanzarse desde la **Consola
+                                    de Python** para mayor seguridad.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ingesta View -->
+                <div id="ingesta-view" class="hidden">
+                    <div class="ingesta-container">
+                        <div class="hero">
+                            <h1>Ingesta <span class="gradient-text">de Recursos</span></h1>
+                            <p>Añade URLs de YouTube o páginas web para que Nexus las procese.</p>
+                        </div>
+
+                        <div class="form-container">
+                            <div class="ingesta-form">
+                                <div class="form-group">
+                                    <label>URL del Recurso</label>
+                                    <input type="text" id="ingest-url"
+                                        placeholder="https://www.youtube.com/watch?v=... o https://ejemplo.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Etiquetas (separadas por comas)</label>
+                                    <input type="text" id="ingest-tags" placeholder="ia, tutorial, ciencia...">
+                                </div>
+                                <button id="btn-submit-ingest" class="btn-primary">
+                                    <i class="fas fa-cloud-download-alt"></i> Procesar e Indexar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="ingest-status" class="status-overlay hidden">
+                            <div class="status-card">
+                                <div class="loader"></div>
+                                <p id="ingest-status-text">Procesando recurso... esto puede tardar unos segundos.</p>
+                                <button id="btn-close-ingest-status" class="hidden">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Detail Overlay -->
+        <div id="detail-overlay" class="overlay hidden">
+            <div class="detail-card">
+                <button class="close-btn">&times;</button>
+                <div id="detail-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>

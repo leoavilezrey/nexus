@@ -19,7 +19,7 @@ class MutatedDeck(BaseModel):
 # Agente mutador. Utilizamos gemini-2.0-flash como modelo estándar (más rápido para mutaciones).
 mutator_agent = Agent(
     'google-gla:gemini-2.0-flash',
-    result_type=MutatedDeck,
+    output_type=MutatedDeck,
     system_prompt='''Eres el Ingeneiro de Mutación Cognitiva de Nexus.
 Tu objetivo es destruir la memorización por habituación (cuando el estudiante reconoce la forma de la pregunta pero no el fondo).
 

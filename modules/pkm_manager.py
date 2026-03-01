@@ -5,6 +5,9 @@ from typing import List, Optional
 
 from core.database import nx_db, RegistryCreate, TagCreate, SessionLocal
 from core.models import ResourceRecord
+from rich.console import Console
+
+console = Console()
 
 def create_note(title: str, tags: List[str]) -> Optional[ResourceRecord]:
     """
@@ -21,14 +24,14 @@ def create_note(title: str, tags: List[str]) -> Optional[ResourceRecord]:
 
     try:
         # 2. Abrir el editor de texto nativo de forma bloqueante
-        print(f"\n[bold cyan]Abriendo editor para la nota:[/bold cyan] '{title}'...")
-        print("[yellow]La terminal está en espera. Cierra el bloc de notas para guardar...[/yellow]\n")
+        console.print(f"\n[bold cyan]Abriendo editor para la nota:[/bold cyan] '{title}'...")
+        console.print("[yellow]La terminal está en espera. Cierra el bloc de notas para guardar...[/yellow]\n")
         
         # subprocess.run es bloqueante por defecto
         subprocess.run(['notepad', temp_path], check=True)
         
     except Exception as e:
-        print(f"[bold white on red]Error al intentar abrir el editor:[/] {e}")
+        console.print(f"[bold white on red]Error al intentar abrir el editor:[/] {e}")
         if os.path.exists(temp_path):
             os.remove(temp_path)
         return None
@@ -43,7 +46,7 @@ def create_note(title: str, tags: List[str]) -> Optional[ResourceRecord]:
         
     # Si la nota quedó vacía o con el texto por defecto, la abortamos para no ensuciar la BD
     if not content or content == f"# {title}\n\nEscribe tu nota aquí...":
-        print("[bold white on red]La nota está vacía o sin cambios. Abortando guardado.[/]")
+        console.print("[bold white on red]La nota está vacía o sin cambios. Abortando guardado.[/]")
         return None
         
     # 5. Mapear los datos al esquema de Pydantic y guardarlos a la BD
@@ -77,9 +80,7 @@ def create_note(title: str, tags: List[str]) -> Optional[ResourceRecord]:
         modified_at=reg.modified_at
     )
     
-    # console.print no está importado aquí pero usaremos un print normal
-    # o podríamos usar la librería rich para mayor visibilidad (la incluimos más adelante)
-    print(f"✅ Nota '{title}' guardada exitosamente en la DB con el ID {reg.id} y {len(tags)} etiqueta(s).")
+    console.print(f"✅ Nota '{title}' guardada exitosamente en la DB con el ID {reg.id} y {len(tags)} etiqueta(s).")
     return rr
 
 if __name__ == "__main__":

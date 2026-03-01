@@ -1,0 +1,5 @@
+2026-02-25 04:40:33,461 - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-02-25 04:40:33,540 - INFO - Iniciando reprocesamiento de 230 videos.
+2026-02-25 04:40:33,546 - INFO - Procesando ID 6: https://www.youtube.com/watch?v=_BteEJkp4bc
+2026-02-25 04:40:39,215 - ERROR - ID 6: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:40:49,221 - INFO - Procesando ID 7: https://www.youtube.com/watch?v=GVf-JZdJjU8

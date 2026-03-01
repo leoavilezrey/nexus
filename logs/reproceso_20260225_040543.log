@@ -1,0 +1,15 @@
+2026-02-25 04:05:43,089 - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-02-25 04:05:43,175 - INFO - Iniciando reprocesamiento de 230 videos.
+2026-02-25 04:05:43,181 - INFO - Procesando ID 6: https://www.youtube.com/watch?v=_BteEJkp4bc
+2026-02-25 04:05:48,417 - ERROR - ID 6: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:05:51,423 - INFO - Procesando ID 7: https://www.youtube.com/watch?v=GVf-JZdJjU8
+2026-02-25 04:05:57,151 - ERROR - ID 7: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:06:04,011 - INFO - Procesando ID 11405: https://www.youtube.com/watch?v=cfNAIQtNbKY
+2026-02-25 04:06:08,765 - ERROR - ID 11405: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:06:11,772 - INFO - Procesando ID 11406: https://www.youtube.com/watch?v=L8tHDY0ssHI
+2026-02-25 04:06:16,202 - ERROR - ID 11406: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:06:19,219 - INFO - Procesando ID 11407: https://www.youtube.com/watch?v=ox4AcqwjMLA
+2026-02-25 04:06:24,433 - ERROR - ID 11407: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:06:27,445 - INFO - Procesando ID 11408: https://www.youtube.com/watch?v=KjdlImP-oWo
+2026-02-25 04:06:34,504 - ERROR - ID 11408: Fallo re-scraped (Sigue Bloqueado).
+2026-02-25 04:06:37,511 - INFO - Procesando ID 11409: https://www.youtube.com/watch?v=b_JjR0hfrKM

@@ -1,0 +1,435 @@
+{
+  "timestamp": "2026-02-28T20:49:56.130392",
+  "total_tests": 71,
+  "passed": 71,
+  "failed": 0,
+  "success_rate": 100.0,
+  "results": [
+    {
+      "component": "Imports",
+      "test": "import core.database",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import core.models",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import core.search_engine",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import core.staging_db",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import modules.analytics",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import modules.file_manager",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import modules.web_scraper",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import modules.pkm_manager",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import modules.exporter",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import modules.study_engine",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import modules.pipeline_manager",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import modules.youtube_manager",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import agents.study_agent",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import agents.summary_agent",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import agents.relationship_agent",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import agents.deepseek_agent",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Imports",
+      "test": "import ui.dashboard (funciones)",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Deps",
+      "test": "pip package: sqlalchemy",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Deps",
+      "test": "pip package: pydantic",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Deps",
+      "test": "pip package: rich",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Deps",
+      "test": "pip package: dotenv",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Deps",
+      "test": "pip package: requests",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Deps",
+      "test": "pip package: bs4",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Deps",
+      "test": "pip package: yt_dlp",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Database",
+      "test": "nexus.db existe",
+      "passed": true,
+      "details": "C:\\Users\\DELL\\Proyectos\\nexus\\nexus.db"
+    },
+    {
+      "component": "Database",
+      "test": "Conexión SQLite",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Database",
+      "test": "Tablas esperadas presentes",
+      "passed": true,
+      "details": "Todas presentes: {'cards', 'registry', 'nexus_links', 'tags'}"
+    },
+    {
+      "component": "Database",
+      "test": "Registros en registry",
+      "passed": true,
+      "details": "Total: 19949"
+    },
+    {
+      "component": "Database",
+      "test": "Tags en tags",
+      "passed": true,
+      "details": "Total: 782"
+    },
+    {
+      "component": "Database",
+      "test": "Cards en cards",
+      "passed": true,
+      "details": "Total: 211"
+    },
+    {
+      "component": "Database",
+      "test": "Links en nexus_links",
+      "passed": true,
+      "details": "Total: 4"
+    },
+    {
+      "component": "Database",
+      "test": "Cards huérfanas",
+      "passed": true,
+      "details": "Encontradas: 0"
+    },
+    {
+      "component": "Database",
+      "test": "Tags huérfanos",
+      "passed": true,
+      "details": "Encontrados: 0"
+    },
+    {
+      "component": "Database",
+      "test": "Links huérfanos",
+      "passed": true,
+      "details": "Encontrados: 0"
+    },
+    {
+      "component": "Database",
+      "test": "PRAGMA journal_mode=WAL",
+      "passed": true,
+      "details": "Actual: wal"
+    },
+    {
+      "component": "Database",
+      "test": "PRAGMA foreign_keys=ON",
+      "passed": true,
+      "details": "Actual: 1"
+    },
+    {
+      "component": "CRUD",
+      "test": "create_registry()",
+      "passed": true,
+      "details": "ID creado: 23799"
+    },
+    {
+      "component": "CRUD",
+      "test": "get_registry()",
+      "passed": true,
+      "details": "Título: __COLD_RUN_TEST__"
+    },
+    {
+      "component": "CRUD",
+      "test": "add_tag()",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "CRUD",
+      "test": "create_card()",
+      "passed": true,
+      "details": "Card ID: 219"
+    },
+    {
+      "component": "CRUD",
+      "test": "update_summary()",
+      "passed": true,
+      "details": "Resultado: True"
+    },
+    {
+      "component": "CRUD",
+      "test": "delete_registry()",
+      "passed": true,
+      "details": "Eliminado: True"
+    },
+    {
+      "component": "Search",
+      "test": "search_registry() sin filtros",
+      "passed": true,
+      "details": "Resultados: 5"
+    },
+    {
+      "component": "Search",
+      "test": "parse_query_string()",
+      "passed": true,
+      "details": "Parsed: {'inc_name': 'python', 'exc_name': '', 'inc_tags': 'docs', 'exc_tags': 'old', 'inc_exts': 'pdf', 'exc_exts': '', 'inc_ids': '1-50', 'is_source': '', 'has_info': ''}"
+    },
+    {
+      "component": "Search",
+      "test": "search_registry() con filtro tag",
+      "passed": true,
+      "details": "Resultados: 5"
+    },
+    {
+      "component": "Analytics",
+      "test": "get_global_metrics()",
+      "passed": true,
+      "details": "Keys: ['registry_counts', 'network', 'srs'], Total registros: 19949"
+    },
+    {
+      "component": "Analytics",
+      "test": "Estructura de métricas",
+      "passed": true,
+      "details": "Esperadas: {'registry_counts', 'srs', 'network'}, Presentes: {'registry_counts', 'srs', 'network'}"
+    },
+    {
+      "component": "Staging",
+      "test": "staging_engine inicializado",
+      "passed": true,
+      "details": "Path: G:\\Mi unidad\\Nexus_Staging\\staging_buffer.db"
+    },
+    {
+      "component": "Staging",
+      "test": "Google Drive (G:) montado",
+      "passed": true,
+      "details": "G:\\Mi unidad accesible"
+    },
+    {
+      "component": "Staging",
+      "test": "init_staging()",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Agents",
+      "test": "GOOGLE_API_KEY configurada",
+      "passed": true,
+      "details": "Clave presente"
+    },
+    {
+      "component": "Agents",
+      "test": "DEEPSEEK_API_KEY configurada",
+      "passed": true,
+      "details": "Clave presente"
+    },
+    {
+      "component": "Agents",
+      "test": "generate_deck_from_registry(mockup=True)",
+      "passed": true,
+      "details": "Cards generadas: 1"
+    },
+    {
+      "component": "Static",
+      "test": "Import local de nx_db en menu_agregar opción 4",
+      "passed": true,
+      "details": "No se detectó import local conflictivo"
+    },
+    {
+      "component": "Static",
+      "test": "content_raw None-checks",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "Static",
+      "test": "Bare except: clauses",
+      "passed": true,
+      "details": "Encontrados: 0 — Deben capturar excepciones específicas"
+    },
+    {
+      "component": "Static",
+      "test": "msvcrt import",
+      "passed": true,
+      "details": "Correcto en Windows o condicional"
+    },
+    {
+      "component": "Files",
+      "test": "main.py",
+      "passed": true,
+      "details": "Size: 700 bytes"
+    },
+    {
+      "component": "Files",
+      "test": "core/database.py",
+      "passed": true,
+      "details": "Size: 11,315 bytes"
+    },
+    {
+      "component": "Files",
+      "test": "core/models.py",
+      "passed": true,
+      "details": "Size: 2,360 bytes"
+    },
+    {
+      "component": "Files",
+      "test": "core/search_engine.py",
+      "passed": true,
+      "details": "Size: 10,677 bytes"
+    },
+    {
+      "component": "Files",
+      "test": "ui/dashboard.py",
+      "passed": true,
+      "details": "Size: 101,963 bytes"
+    },
+    {
+      "component": "Files",
+      "test": "modules/analytics.py",
+      "passed": true,
+      "details": "Size: 2,717 bytes"
+    },
+    {
+      "component": "Files",
+      "test": ".env",
+      "passed": true,
+      "details": "Size: 187 bytes"
+    },
+    {
+      "component": "Files",
+      "test": "requirements.txt",
+      "passed": true,
+      "details": "Size: 1,496 bytes"
+    },
+    {
+      "component": "WebServer",
+      "test": "FastAPI app importable",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "component": "WebServer",
+      "test": "Ruta /",
+      "passed": true,
+      "details": "Registrada"
+    },
+    {
+      "component": "WebServer",
+      "test": "Ruta /api/records",
+      "passed": true,
+      "details": "Registrada"
+    },
+    {
+      "component": "WebServer",
+      "test": "Ruta /api/stats",
+      "passed": true,
+      "details": "Registrada"
+    },
+    {
+      "component": "WebServer",
+      "test": "Ruta /api/recall/cards",
+      "passed": true,
+      "details": "Registrada"
+    },
+    {
+      "component": "Logs",
+      "test": "Errores en nexus.log",
+      "passed": true,
+      "details": "Errores: 0, Warnings: 0"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ class ResourceRecord(BaseModel):
     title: str = Field(..., description="Nombre o título del recurso")
     path_url: str = Field(..., description="Ruta física local o URL externa")
     content_raw: Optional[str] = Field(default=None, description="Contenido extraído o notas")
+    summary: Optional[str] = Field(default=None, description="Resumen destilado por IA")
     metadata_dict: Dict[str, Any] = Field(default_factory=dict, description="Metadatos en formato JSON")
     is_flashcard_source: bool = Field(default=False, description="¿Marcado como fuente de flashcards?")
     created_at: datetime = Field(default_factory=datetime.utcnow)

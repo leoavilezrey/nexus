@@ -6,7 +6,7 @@ try:
     from google import genai
     from google.genai import types
 except ImportError:
-    print("[bold white on red]Librería 'google-genai' no encontrada. Verifica si se instaló correctamente.[/]")
+    pass
 
 from pydantic import TypeAdapter
 
@@ -14,12 +14,18 @@ from core.models import StudyCard
 # Importamos la abstracción de SQLalchemy (Record) directamente, ya que el dashboard nos arroja un Registry.
 from core.database import Registry
 
+from rich.console import Console
+console = Console()
+from rich.prompt import Confirm
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env
+load_dotenv()
+
 def get_client():
     """Obtiene el cliente estandarizado GenAI agarrando GOOGLE_API_KEY local."""
     api_key = os.environ.get("GOOGLE_API_KEY")
-    if not api_key:
-        print("[yellow]Advertencia: No se encontró GOOGLE_API_KEY en variables de entorno. Las llamadas fallarán si no se setea.[/yellow]")
-    return genai.Client(api_key=api_key)
+    return genai.Client(api_key=api_key) if api_key else None
 
 def generate_relationship_cards(record_a: Registry, record_b: Registry) -> List[StudyCard]:
     """
@@ -62,7 +68,7 @@ def generate_relationship_cards(record_a: Registry, record_b: Registry) -> List[
 
     if not os.environ.get("GOOGLE_API_KEY"):
         # Mockup Funcional si no hay llave para evitar el Crash Masivo
-        print("[yellow]\n[Mockup Mode] Simulación de IA en curso debido a ausencia de API KEY. Generando tarjeta de prueba...[/yellow]")
+        console.print("[yellow]\n[Mockup Mode] Simulación de IA en curso debido a ausencia de API KEY. Generando tarjeta de prueba...[/yellow]")
         return [
             StudyCard(
                 parent_id=record_a.id,
@@ -99,7 +105,7 @@ def generate_relationship_cards(record_a: Registry, record_b: Registry) -> List[
             # Silenciar error para intentar el próximo modelo silenciosamente como pidió el blueprint
             # pero imprimir la excepcion si es el ultimo modelo
             if model_name == models_to_try[-1]:
-                print(f"[bold white on red]Error Fatal: Todos los modelos de Gemini fallaron. Último intento ({model_name}) dio el error: {e}[/]")
+                console.print(f"[bold white on red]Error Fatal: Todos los modelos de Gemini fallaron. Último intento ({model_name}) dio el error: {e}[/]")
             continue
 
     return []
