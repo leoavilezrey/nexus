@@ -17,6 +17,7 @@ def search_registry(
     has_info: Optional[str] = None,
     record_ids_str: Optional[str] = None,
     is_flashcard_source: Optional[str] = None,
+    order_by: Optional[str] = None,
     limit: int = 50,
     offset: int = 0
 ) -> List[ResourceRecord]:
@@ -175,8 +176,15 @@ def search_registry(
                 not_(Registry.id.in_(db_session.query(Card.parent_id)))
             ))
 
-    # 8. Paginador y Orden (Siempre el modificado recientemente de primero)
-    query = query.order_by(Registry.modified_at.desc()).limit(limit).offset(offset)
+    # 8. Paginador y Orden (Dinámico)
+    if order_by == 'vdesc':
+        query = query.order_by(Registry.last_viewed_at.desc().nulls_last())
+    elif order_by == 'vasc':
+        query = query.order_by(Registry.last_viewed_at.asc().nulls_first())
+    else:
+        query = query.order_by(Registry.modified_at.desc())
+        
+    query = query.limit(limit).offset(offset)
     
     # 9. Ejecución SQL
     results = query.all()
@@ -195,7 +203,8 @@ def search_registry(
             metadata_dict=meta,
             is_flashcard_source=bool(row.is_flashcard_source),
             created_at=row.created_at,
-            modified_at=row.modified_at
+            modified_at=row.modified_at,
+            last_viewed_at=row.last_viewed_at
         )
         pydantic_results.append(rr)
 
@@ -218,7 +227,7 @@ def parse_query_string(query_str: str) -> dict:
         'inc_tags': [], 'exc_tags': [],
         'inc_exts': [], 'exc_exts': [],
         'inc_ids': "", 'is_source': "",
-        'has_info': ""
+        'has_info': "", 'order_by': ""
     }
     
     parts = query_str.split()
@@ -242,6 +251,8 @@ def parse_query_string(query_str: str) -> dict:
             if val in ['s', 'y', '1', 'true']: filters['has_info'] = 's'
             elif val in ['n', '0', 'false']: filters['has_info'] = 'n'
             else: filters['has_info'] = val
+        elif p.startswith('o:'):
+            filters['order_by'] = p[2:].lower()
         elif p.startswith('-'):
             filters['exc_name'].append(p[1:])
         else:
@@ -256,5 +267,6 @@ def parse_query_string(query_str: str) -> dict:
         'exc_exts': ",".join(filters['exc_exts']),
         'inc_ids': filters['inc_ids'],
         'is_source': filters['is_source'],
-        'has_info': filters['has_info']
+        'has_info': filters['has_info'],
+        'order_by': filters['order_by']
     }

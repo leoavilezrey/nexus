@@ -20,6 +20,7 @@ class ResourceRecord(BaseModel):
     is_flashcard_source: bool = Field(default=False, description="¿Marcado como fuente de flashcards?")
     created_at: datetime = Field(default_factory=datetime.utcnow)
     modified_at: datetime = Field(default_factory=datetime.utcnow)
+    last_viewed_at: Optional[datetime] = None
 
 
 class NexusLink(BaseModel):

@@ -1,11 +1,11 @@
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List, Dict, Any
 
 from sqlalchemy import (
     create_engine, Column, Integer, String, Text, Float, JSON, 
-    DateTime, ForeignKey, event
+    DateTime, ForeignKey, event, text
 )
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from sqlalchemy.engine import Engine
@@ -34,7 +34,7 @@ os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 engine = create_engine(f"sqlite:///{DB_PATH}")
 
 # Escuchar en la conexión para habilitar las opciones como WAL
-@event.listens_for(Engine, "connect")
+@event.listens_for(engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor = dbapi_connection.cursor()
     # Modo WAL para alto rendimiento y concurrencia
@@ -71,8 +71,9 @@ class Registry(Base):
     
     is_flashcard_source = Column(Integer, default=0) # 0=False, 1=True
     
-    created_at = Column(DateTime, default=datetime.utcnow)
-    modified_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    modified_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    last_viewed_at = Column(DateTime, nullable=True)
     
     # --- Relaciones ---
     tags = relationship("Tag", back_populates="registry", cascade="all, delete-orphan")
@@ -176,8 +177,23 @@ class CardCreate(BaseModel):
 
 def init_db():
     """Crea las tablas en la base de datos si no existen."""
-    Base.metadata.create_all(bind=engine)
-    console.print(f"[bold green]✓ Base de datos Nexus (SQLite WAL) inicializada correctamente en:[/] {DB_PATH}")
+    try:
+        Base.metadata.create_all(bind=engine)
+        
+        with engine.connect() as conn:
+            # Verificar si la columna existe de manera segura
+            result = conn.execute(text("PRAGMA table_info(registry)"))
+            columns = [row[1] for row in result.fetchall()]
+            
+            if 'last_viewed_at' not in columns:
+                console.print("[yellow]Aplicando parche a base de datos: Añadiendo last_viewed_at...[/yellow]")
+                conn.execute(text("ALTER TABLE registry ADD COLUMN last_viewed_at DATETIME"))
+                conn.commit()
+
+        console.print(f"[bold green]✓ Base de datos Nexus (SQLite WAL) inicializada correctamente en:[/] {DB_PATH}")
+    except Exception as db_err:
+        console.print(f"[bold red]❌ Error crítico al inicializar o parchear la base de datos Nexus:[/] {db_err}")
+        raise db_err
 
 class NexusCRUD:
     """Clase principal de abstracción para realizar operaciones CRUD básicas."""
@@ -281,6 +297,59 @@ class NexusCRUD:
             })
             session.commit()
             return rows > 0
+
+    def update_last_viewed_in_session(self, session, registry_id: int) -> bool:
+        """Actualiza la fecha de última visualización usando una sesión existente."""
+        # No commitea — responsabilidad del llamador
+        rows = session.query(Registry).filter(Registry.id == registry_id).update({
+            "last_viewed_at": datetime.now(timezone.utc).replace(tzinfo=None)
+        })
+        return rows > 0
+
+    # ------------------------------------------------------------------------
+    # HELPERS ATÓMICOS PARA CONTEXTOS EXISTENTES (NO HACEN COMMIT INTENCIONAL)
+    # ------------------------------------------------------------------------
+    
+    def get_registry_in_session(self, session, registry_id: int) -> Optional[Registry]:
+        """Obtiene un registro usando una sesión SQLAlchemy inyectada externamente."""
+        from sqlalchemy.orm import joinedload
+        # No commitea — responsabilidad del llamador
+        return session.query(Registry).options(
+            joinedload(Registry.tags)
+        ).filter(Registry.id == registry_id).first()
+
+    def create_card_in_session(self, session, card_data: CardCreate) -> Card:
+        """Adiciona una flashcard usando una sesión existente."""
+        # No commitea — responsabilidad del llamador
+        card = Card(**card_data.model_dump())
+        session.add(card)
+        return card
+
+    def delete_registry_in_session(self, session, registry_id: int) -> bool:
+        """Elimina un registro y sus dependencias (en cascada manual defensiva) usando una sesión existente."""
+        from sqlalchemy import or_
+        # No commitea — responsabilidad del llamador
+        session.query(Tag).filter(Tag.registry_id == registry_id).delete(synchronize_session=False)
+        session.query(NexusLink).filter(or_(NexusLink.source_id == registry_id, NexusLink.target_id == registry_id)).delete(synchronize_session=False)
+        session.query(Card).filter(Card.parent_id == registry_id).delete(synchronize_session=False)
+        
+        deleted = session.query(Registry).filter(Registry.id == registry_id).delete(synchronize_session=False)
+        return deleted > 0
+
+    def update_summary_in_session(self, session, registry_id: int, summary_text: str) -> bool:
+        """Actualiza el resumen usando una sesión existente."""
+        # No commitea — responsabilidad del llamador
+        rows = session.query(Registry).filter(Registry.id == registry_id).update({
+            Registry.summary: summary_text
+        })
+        return rows > 0
+
+    def create_link_in_session(self, session, link_data: NexusLinkCreate) -> NexusLink:
+        """Crea una relación entre dos registros usando una sesión existente."""
+        # No commitea — responsabilidad del llamador
+        link = NexusLink(**link_data.model_dump())
+        session.add(link)
+        return link
 
 # Exportamos la instancia para su uso global si así se requiere
 nx_db = NexusCRUD()

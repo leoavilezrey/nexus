@@ -1,0 +1,22 @@
+--- DIAGNÓSTICO AUTOMATIZADO (ASISTENTE) ---
+
+[1] Perfil de Tiempo de Carga (Importaciones y DB):
+  - Import core.database: 5.2392s
+  - Import agents.study_agent: 7.1537s
+  - Import ui.dashboard: 7.8662s
+  > Tiempo total de arranque: 20.2631s
+
+[2] Análisis Opción 3 (Detalle de Registro y Lógica ID):
+  - Registro de prueba ID 1 ('Introduccion a las Bases de Dat - Nacho Cabanes.pdf')
+  - _show_record_detail usa '.tiny_trunc' en dashboard.py:L729, truncando a 75 caracteres.
+  - Falla en menu_active_recall(): falta `elif cmd.isdigit():`.
+
+[3] Análisis Navegación en Tarjetas de Estudio
+  - ERROR DETECTADO: 'salir' vuelve a menu_active_recall, no al Dashboard principal.
+  - No hay opción explícita para 'Siguiente tema'.
+  - UI INCOMPLETO: La opción 'editar' sí funciona pero el texto dice solo: 'Respuesta (Enter), \'editar\', \'eliminar\' o \'atras\''.
+
+[4] Análisis de Teclas de Flecha (Arrow Keys)
+  - ERROR DETECTADO: El dashboard usa `Prompt.ask` (basado en `input()`) para todas las pulsaciones de menú.
+  - Las flechas del teclado en Windows solo desplazan el cursor del buffer de input.
+  - La función `get_key()` está definida pero NUNCA es llamada.

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Cloud</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+        <div class="login-card">
+            <h1>Nexus Cloud</h1>
+            <p>Acceso Seguro</p>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Email" required autofocus>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="submit">Entrar</button>
+            </form>
+            <div id="login-error" class="error-msg"></div>
+        </div>
+    </div>
+
+    <!-- Main App Screen -->
+    <div id="app-screen" class="screen hidden">
+        <header>
+            <div class="logo">Nexus Cloud</div>
+            <div class="header-actions">
+                <button id="btn-new-record" class="btn-primary">➕ Nuevo</button>
+                <button id="btn-logout" class="btn-secondary">🚪 Salir</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Buscar... (ej. t:docs, o:vdesc, python)">
+            </div>
+
+            <div id="global-error" class="error-msg hidden"></div>
+
+            <!-- Records List -->
+            <div class="list-container">
+                <table id="records-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tipo</th>
+                            <th>Título</th>
+                            <th>Creación</th>
+                            <th>Última Vista</th>
+                            <th>Info/Ruta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="records-tbody">
+                        <!-- Filled via JS -->
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button id="btn-prev">Anterior</button>
+                    <span id="page-indicator">Pág. 1</span>
+                    <button id="btn-next">Siguiente</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form (Create/Edit) -->
+    <div id="record-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">Nuevo Registro</h2>
+            <form id="record-form">
+                <label>Título:</label>
+                <input type="text" id="form-title" required>
+                
+                <label>Tipo:</label>
+                <select id="form-type">
+                    <option value="note">note (Nota de Texto)</option>
+                    <option value="web">web (Artículo Web)</option>
+                    <option value="youtube">youtube (Video Corto/URL)</option>
+                    <!-- 'file' omitido intencionalmente por Data Isolation -->
+                </select>
+
+                <label>Contenido / URL:</label>
+                <textarea id="form-content" rows="4"></textarea>
+
+                <label>Descripción:</label>
+                <input type="text" id="form-desc">
+                
+                <label>Etiquetas (separadas por coma):</label>
+                <input type="text" id="form-tags" placeholder="ej. AI, python, docs">
+
+                <div class="modal-actions">
+                    <button type="button" id="btn-cancel-modal" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar Nube</button>
+                </div>
+            </form>
+            <div id="modal-error" class="error-msg"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

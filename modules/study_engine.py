@@ -9,6 +9,7 @@ from rich.prompt import Prompt
 
 # Asumiendo que el script principal establece la raíz del proyecto para importaciones
 from core.database import nx_db, Card, Registry
+from core.exceptions import ReturnToMain
 
 from rich.theme import Theme
 
@@ -292,20 +293,35 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
             card_needs_grading = True
             
             while True:
-                prompt_msg = "\n[yellow]Respuesta (Enter), 'editar', 'eliminar' o 'atras'[/]"
+                prompt_msg = "\n[yellow]Respuesta (Enter) │ [bold]s[/] Siguiente tema │ [bold]eq/ea[/] Editar Q/A │ [bold]<[/] Atrás │ [bold]0/m[/] Menú Ppal │ [bold]del[/] Eliminar[/]"
                 if auto_graded:
-                    prompt_msg = "\n[bold yellow]Tu Elección (ej. 'a', 'b' o 'v'):[/]"
+                    prompt_msg = "\n[bold yellow]Tu Elección (ej. 'a', 'b' o 'v') │ Otras opciones arriba (s, eq, <, 0):[/]"
                 
                 user_answer = Prompt.ask(prompt_msg, console=console)
                 u_ans_lower = user_answer.strip().lower()
 
-                if u_ans_lower in ['salir', 'atras', 'regresar']:
-                    console.print("\n[yellow]Saliendo de la sesión de Active Recall...[/]")
+                if u_ans_lower in ['<', 'salir', 'atras', 'regresar']:
+                    console.print("\n[yellow]Saliendo de la sesión de Active Recall al Menú Anterior...[/]")
                     time.sleep(1)
                     card_needs_grading = False
                     break
+                    
+                elif u_ans_lower in ['0', 'm', 'menu']:
+                    console.print("\n[yellow]Forzando salida al Menú Principal del Dashboard...[/]")
+                    time.sleep(1)
+                    raise ReturnToMain()
+                    
+                elif u_ans_lower == 's':
+                    console.print("\n[bold bright_cyan]Saltando al siguiente tema...[/]")
+                    cards_to_remove = [c for c in cards[idx:] if c.parent_id == card.parent_id]
+                    for cr in cards_to_remove:
+                        cards.remove(cr)
+                    total_cards = len(cards)
+                    card_needs_grading = False
+                    time.sleep(1)
+                    break
                 
-                elif u_ans_lower == 'eliminar':
+                elif u_ans_lower == 'eliminar' or u_ans_lower == 'del':
                     confirm = Prompt.ask("¿Seguro que deseas [bold red]ELIMINAR[/] esta Flashcard permanentemente? (s/n)", console=console).strip().lower()
                     if confirm == 's':
                         session.delete(card)
@@ -316,14 +332,21 @@ def start_pomodoro_session(pomodoro_minutes: int = 25, adelantar: bool = False, 
                         break
                     else:
                         draw_header()
-                        # Re-mostrar
                         continue
                 
-                elif u_ans_lower == 'editar':
-                    console.print("\n[bold bright_cyan]--- Modificando Tarjeta ---[/]")
+                elif u_ans_lower == 'eq' or u_ans_lower == 'editar':
+                    console.print("\n[bold bright_cyan]--- Modificando Pregunta ---[/]")
                     new_q = Prompt.ask("Nueva Pregunta o JSON", default=card.question, console=console).strip()
-                    new_a = Prompt.ask("Nueva Respuesta", default=card.answer, console=console).strip()
                     if new_q: card.question = new_q
+                    session.commit()
+                    console.print("[bold green]✔ Actualizada.[/]")
+                    time.sleep(1)
+                    draw_header()
+                    continue
+
+                elif u_ans_lower == 'ea':
+                    console.print("\n[bold bright_cyan]--- Modificando Respuesta ---[/]")
+                    new_a = Prompt.ask("Nueva Respuesta", default=card.answer, console=console).strip()
                     if new_a: card.answer = new_a
                     session.commit()
                     console.print("[bold green]✔ Actualizada.[/]")

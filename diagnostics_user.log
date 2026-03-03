@@ -1,0 +1,7 @@
+--- Log de Diagnóstico del Usuario ---
+1. Prueba de teclado (msvcrt):
+  -> Detectado código especial: b'\xe0' + b'H'
+  -> Detectado código especial: b'\xe0' + b'P'
+  -> Detectado código especial: b'\xe0' + b'K'
+  -> Detectado código especial: b'\xe0' + b'M'
+  -> Detectado carácter normal: b'q'

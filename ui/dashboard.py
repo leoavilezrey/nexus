@@ -453,7 +453,8 @@ def menu_gestionar(initial_query: str = ""):
 
     filtros = {
         'inc_name': "", 'exc_name': "", 'inc_tags': "", 'exc_tags': "",
-        'inc_exts': "", 'exc_exts': "", 'has_info': "", 'inc_ids': "", 'is_source': ""
+        'inc_exts': "", 'exc_exts': "", 'has_info': "", 'inc_ids': "", 'is_source': "",
+        'order_by': ""
     }
 
     if initial_query:
@@ -488,6 +489,7 @@ def menu_gestionar(initial_query: str = ""):
                 has_info=filtros['has_info'],
                 record_ids_str=filtros['inc_ids'],
                 is_flashcard_source=filtros['is_source'],
+                order_by=filtros['order_by'],
                 limit=limit_var,
                 offset=offset_var
             )
@@ -500,10 +502,13 @@ def menu_gestionar(initial_query: str = ""):
         has_next = len(results) > items_per_page
         display_results = results[:items_per_page]
 
-        # ── Tabla extendida: ID | Tipo | Título | d(Descripción) | i(Info/Ruta) | m(Modificado) | e(Estado) | Tags | Área
-        filtros_activos_str = 'Sí' if any(filtros.values()) else 'No'
+        # Excluir order_by del cálculo de filtros activos reales para evitar falsos positivos
+        filtros_activos_str = 'Sí' if any(v for k, v in filtros.items() if k != 'order_by' and v) else 'No'
+        orden_ui = "Recientes" if filtros.get('order_by') == 'vdesc' else "Olvidados" if filtros.get('order_by') == 'vasc' else "Modificados"
+        
         title_str = (
             f"[bold bright_cyan]🗂️ GESTIONAR ARCHIVOS (Pág. {page + 1})[/] "
+            f"| Orden: [green]{orden_ui}[/] "
             f"| Filtros: [yellow]{filtros_activos_str}[/] "
             f"| [white]\u2190\u2192 Navegar \u2502 Q Filtrar \u2502 L Limpiar \u2502 [ID] Detalle \u2502 0 Salir[/]"
         )
@@ -697,20 +702,34 @@ def menu_gestionar(initial_query: str = ""):
 
 def _show_record_detail(rec_id: int):
     """Vista detallada de un Registro. P=volver lista, 0=menú principal."""
-    from core.database import Tag, Registry, NexusLink
+    from core.database import Tag, Registry, NexusLink, CardCreate
     
     try:
-      while True:
-        console.clear()
-        show_header()
-        
-        with SessionLocal() as db_session:
-            reg = nx_db.get_registry(rec_id)
+      with SessionLocal() as db_session:
+        while True:
+            # Prevención Integral de Stale Objects (limpia cache para read-consistency)
+            db_session.expire_all()
+            
+            console.clear()
+            show_header()
+            
+            # Usar la sesión inyectada
+            reg = nx_db.get_registry_in_session(db_session, rec_id)
+            
             if not reg:
                 console.print(f"[bold yellow]❌ Registro con ID {rec_id} no encontrado en la Base de Datos.[/bold yellow]")
                 time.sleep(1.5)
                 break
                 
+            # Registrar visualización en base de datos con manejo seguro
+            try:
+                nx_db.update_last_viewed_in_session(db_session, rec_id)
+                db_session.commit()
+            except Exception as e:
+                db_session.rollback()
+                # Imprimir error sin bloquear la interfaz 
+                console.print(f"[red]Aviso: No se pudo actualizar el registro de lectura en BD: {e}[/red]")
+            
             tags_db = db_session.query(Tag).filter(Tag.registry_id == rec_id).all()
             tags_list = [t.value for t in tags_db]
             tags_str = ", ".join(tags_list) if tags_list else "Sin Etiquetas"
@@ -725,7 +744,7 @@ def _show_record_detail(rec_id: int):
                 if m.get('view_count'): extra_meta += f"  • Vistas: {m['view_count']:,}\n"
                 if m.get('upload_date'): extra_meta += f"  • Fecha Upload: {m['upload_date']}\n"
 
-            # Truncado agresivo para garantizar visibilidad vertical total
+            # Truncado solo para campos de una línea (rutas cortas, metadata de tabla superficial)
             def tiny_trunc(text, limit=75):
                 if not text: return "[white]N/A[/white]"
                 text = text.replace('\n', ' ').strip()
@@ -734,17 +753,18 @@ def _show_record_detail(rec_id: int):
             panel_text = (
                 f"[bold white]ID:[/] [bright_cyan]{reg.id}[/] | "
                 f"[bold white]Tipo:[/] [yellow]{reg.type.upper()}[/] | "
-                f"[bold white]Recall:[/] {'[green]SÍ[/]' if reg.is_flashcard_source else '[red]NO[/]'} │ "
+                f"[bold white]Recall:[/] {'[green]SÍ[/]' if reg.is_flashcard_source else '[red]NO[/]'} │ "
                 f"[bold white]Área/Tema:[/] [bright_blue]{tiny_trunc(tags_str.split(',')[0] if tags_str != 'Sin Etiquetas' else '', 30)}[/]\n"
-                f"[bold white]Título:[/] [bright_white]{tiny_trunc(reg.title, 90)}[/]\n"
-                f"[bold white]Ruta/URL:[/] [white]{tiny_trunc(reg.path_url, 90)}[/]\n"
-                f"[bold white]Tags:[/] [yellow]{tiny_trunc(tags_str, 90)}[/]\n"
-                f"{tiny_trunc(extra_meta, 120)}\n"
-                f"[bold green]✨ Resumen (IA):[/] {tiny_trunc(reg.summary, 150)}\n"
-                f"[bold green]📝 Contenido/Transcripción:[/] {tiny_trunc(reg.content_raw, 150)}\n\n"
+                f"[bold white]Título:[/] [bright_white]{reg.title or 'N/A'}[/]\n"
+                f"[bold white]Ruta/URL:[/] [white]{reg.path_url or 'N/A'}[/]\n"
+                f"[bold white]Tags:[/] [yellow]{tags_str}[/]\n"
+                f"{extra_meta}\n"
+                f"[bold green]✨ Resumen (IA):[/]\n{reg.summary or '[white]Sin resumen generado.[/white]'}\n\n"
+                f"[bold green]📝 Contenido/Transcripción:[/]\n{reg.content_raw or '[white]Sin contenido disponible.[/white]'}\n\n"
                 f"[yellow]P = Lista anterior │ 0 = Menú principal │ 1 Editar │ 2 Abrir │ 3 Lectura │ 4 IA │ 5 Mazo │ 6 Borrar │ 7 Vínculo │ 8 Recall[/]"
             )
-            console.print(Panel(panel_text, title="🔍 Ficha Técnica Completa", box=box.HEAVY, border_style="bright_cyan"))
+            # Rich maneja por defecto el wrap (ajuste de línea) permitiendo vista detallada ilimitada dentro del ancho de consola
+            console.print(Panel(panel_text, title="🔍 Ficha Técnica Completa", box=box.HEAVY, border_style="bright_cyan", expand=False))
             
             # Sub-Menú Vista Detalle — Arquitectura 5 componentes
             console.print("\n[bold yellow]Gestión del Registro (tecla rápida):[/]")
@@ -761,47 +781,46 @@ def _show_record_detail(rec_id: int):
                 # Volver directo al menú principal cerrando todas las capas
                 raise ReturnToMain()
             elif action == '1':
-                console.print("\n[white]Deja un campo vacío para no modificar ese campo.[/white]")
-                
-                n_source = Prompt.ask("[bold]¿Es fuente de Flashcards?[/] (s/n/Enter para omitir)", default="")
-                if n_source.strip().lower() in ['s', 'n']:
-                    db_session.query(Registry).filter(Registry.id == rec_id).update({
-                        Registry.is_flashcard_source: 1 if n_source.strip().lower() == 's' else 0
-                    })
-
-                n_tags = Prompt.ask("[bold]Nuevas Etiquetas[/] (separadas por coma, Enter para omitir)")
-                if n_tags.strip():
-                    db_session.query(Tag).filter(Tag.registry_id == rec_id).delete()
-                    for t in n_tags.split(','):
-                        if t.strip():
-                            db_session.add(Tag(registry_id=rec_id, value=t.strip()))
-
-                n_tema = Prompt.ask("[bold]Área o Tema[/] (Enter para omitir)")
-                if n_tema.strip():
-                    # El tema se guarda como meta_info['topic']
-                    meta_actual = reg.meta_info or {}
-                    meta_actual['topic'] = n_tema.strip()
-                    db_session.query(Registry).filter(Registry.id == rec_id).update({
-                        Registry.meta_info: meta_actual
-                    })
-
-                n_desc = Prompt.ask("[bold]Nueva Descripción (content_raw)[/] (Enter para omitir)")
-                if n_desc.strip():
-                    db_session.query(Registry).filter(Registry.id == rec_id).update({
-                        Registry.content_raw: n_desc.strip()
-                    })
-
-                n_summary = Prompt.ask("[bold]Nuevo Resumen[/] (Enter para omitir)")
-                if n_summary.strip():
-                    db_session.query(Registry).filter(Registry.id == rec_id).update({
-                        Registry.summary: n_summary.strip()
-                    })
-
-                db_session.commit()
+                try:
+                    console.print("\n[white]Deja un campo vacío para no modificar ese campo.[/white]")
                     
-                console.print("[green]Cambios guardados con éxito en la Base de Datos.[/]")
+                    n_source = Prompt.ask("[bold]¿Es fuente de Flashcards?[/] (s/n/Enter para omitir)", default="")
+                    if n_source.strip().lower() in ['s', 'n']:
+                        reg.is_flashcard_source = 1 if n_source.strip().lower() == 's' else 0
 
-                time.sleep(1.5)
+                    n_tags = Prompt.ask("[bold]Nuevas Etiquetas[/] (separadas por coma, Enter para omitir)")
+                    if n_tags.strip():
+                        db_session.query(Tag).filter(Tag.registry_id == rec_id).delete()
+                        for t in n_tags.split(','):
+                            if t.strip():
+                                db_session.add(Tag(registry_id=rec_id, value=t.strip()))
+
+                    n_tema = Prompt.ask("[bold]Área o Tema[/] (Enter para omitir)")
+                    if n_tema.strip():
+                        # El tema se guarda como meta_info['topic']
+                        meta_actual = reg.meta_info or {}
+                        meta_actual['topic'] = n_tema.strip()
+                        # Necesitamos setearlo así explícitamente y usar flag_modified si sqlalchemy no capta cambios en dict
+                        from sqlalchemy.orm.attributes import flag_modified
+                        reg.meta_info = meta_actual
+                        flag_modified(reg, "meta_info")
+
+                    n_desc = Prompt.ask("[bold]Nueva Descripción (content_raw)[/] (Enter para omitir)")
+                    if n_desc.strip():
+                        reg.content_raw = n_desc.strip()
+
+                    n_summary = Prompt.ask("[bold]Nuevo Resumen[/] (Enter para omitir)")
+                    if n_summary.strip():
+                        reg.summary = n_summary.strip()
+
+                    db_session.commit()
+                    console.print("[green]Cambios guardados con éxito en la Base de Datos.[/]")
+                    time.sleep(1.5)
+                except Exception as e:
+                    db_session.rollback()
+                    db_session.expire_all()
+                    console.print(f"[bold red]Error al guardar: {e}[/]")
+                    time.sleep(2)
                 
             elif action == '2':
                 path_str = reg.path_url
@@ -841,7 +860,7 @@ def _show_record_detail(rec_id: int):
                     time.sleep(2)
                     
             elif action == '3':
-                # Modo Repaso Interactivo con Nodos y Salto
+                # Modo Repaso Interactivo con Nodos y Salto (READ ONLY - SEGURA DENTRO DE SESION A)
                 while True:
                     console.clear()
                     show_header()
@@ -882,13 +901,20 @@ def _show_record_detail(rec_id: int):
                 confirm = Prompt.ask("Escribe [bold white]eliminar[/] para confirmar, o presiona Enter para abortar", console=console).strip().lower()
                 
                 if confirm == 'eliminar':
-                    success = nx_db.delete_registry(rec_id)
-                    if success:
-                        console.print("\n[bold green]✅ Registro evaporado con éxito de la base de datos.[/]")
-                    else:
-                        console.print("\n[bold white on red]❌ Hubo un error al intentar borrar el registro físico de la base de datos.[/]")
-                    time.sleep(1.5)
-                    break
+                    try:
+                        success = nx_db.delete_registry_in_session(db_session, rec_id)
+                        db_session.commit()
+                        if success:
+                            console.print("\n[bold green]✅ Registro evaporado con éxito de la base de datos.[/]")
+                        else:
+                            console.print("\n[bold white on red]❌ Hubo un error al intentar borrar el registro físico de la base de datos.[/]")
+                        time.sleep(1.5)
+                        break  # ES VITAL ROMPER EL BUCLE, el registro ha muerto (evita DetachedInstanceError)
+                    except Exception as e:
+                        db_session.rollback()
+                        db_session.expire_all()
+                        console.print(f"\n[bold red]Error interno eliminando registro: {e}[/]")
+                        time.sleep(2)
                 else:
                     console.print("\n[yellow]Operación de borrado cancelada. Sobrevivió un día más.[/yellow]")
                     time.sleep(1.5)
@@ -908,7 +934,6 @@ def _show_record_detail(rec_id: int):
                     if sub_ia == '0': break
                     
                     if sub_ia == '1':
-                        from core.database import CardCreate
                         from agents.study_agent import generate_deck_from_registry, get_client
                         from rich.prompt import Confirm
                         
@@ -920,35 +945,48 @@ def _show_record_detail(rec_id: int):
                                 mockup_only = True
 
                         console.print("\n[bold yellow]🤖 Destilando conceptos...[/]")
-                        with console.status("[dim]Procesando...[/dim]", spinner="dots"):
-                            cards = generate_deck_from_registry(reg, mockup_only=mockup_only)
-                        
-                        if cards:
-                            for card in cards:
-                                nx_db.create_card(CardCreate(parent_id=rec_id, question=card.question, answer=card.answer, type=card.card_type))
-                            console.print(f"\n[bold green]✅ ¡Éxito! {len(cards)} tarjetas nuevas en el sistema.[/bold green]")
+                        try:
+                            with console.status("[dim]Procesando...[/dim]", spinner="dots"):
+                                cards = generate_deck_from_registry(reg, mockup_only=mockup_only)
                             
-                            post_ia = Prompt.ask("\n[bold][v][/] Ver/Editar tarjetas ahora | [bold][Enter][/] Volver", default="", console=console)
-                            if post_ia.lower() == 'v':
-                                # Saltamos al menú de gestión (acción 5 del menú principal de detalle)
-                                action = '5'
-                                break # Rompemos el bucle del sub-menú IA para que el bucle superior procese action='5'
-                        else:
-                            console.print("\n[bold red]❌ Falló la generación.[/]")
+                            if cards:
+                                for card in cards:
+                                    nx_db.create_card_in_session(db_session, CardCreate(parent_id=rec_id, question=card.question, answer=card.answer, type=card.card_type))
+                                db_session.commit()
+                                console.print(f"\n[bold green]✅ ¡Éxito! {len(cards)} tarjetas nuevas en el sistema.[/bold green]")
+                                
+                                post_ia = Prompt.ask("\n[bold][v][/] Ver/Editar tarjetas ahora | [bold][Enter][/] Volver", default="", console=console)
+                                if post_ia.lower() == 'v':
+                                    action = '5'
+                                    break
+                            else:
+                                console.print("\n[bold red]❌ Falló la generación. La IA no devolvió matriz de conceptos.[/]")
+                                time.sleep(2)
+                        except Exception as e:
+                            db_session.rollback()
+                            db_session.expire_all()
+                            console.print(f"\n[bold red]Error en transacción IA: {e}[/]")
                             time.sleep(2)
                             
                     elif sub_ia == '2':
                         from agents.summary_agent import generate_summary_from_registry
                         console.print("\n[bold yellow]🤖 Sintetizando ideas...[/]")
-                        with console.status("[dim]Analizando...[/dim]", spinner="dots"):
-                            summary = generate_summary_from_registry(reg)
-                        if summary:
-                            nx_db.update_summary(rec_id, summary)
-                            console.print(f"\n[bold green]✅ Resumen actualizado.[/bold green]")
-                            console.print(Panel(summary, title="Resumen IA", border_style="green"))
-                            Prompt.ask("\n[bold]Enter para continuar...[/]")
-                        else:
-                            console.print("\n[bold red]❌ Falló la síntesis.[/]")
+                        try:
+                            with console.status("[dim]Analizando...[/dim]", spinner="dots"):
+                                summary = generate_summary_from_registry(reg)
+                            if summary:
+                                nx_db.update_summary_in_session(db_session, rec_id, summary)
+                                db_session.commit()
+                                console.print(f"\n[bold green]✅ Resumen actualizado en Base de Datos.[/bold green]")
+                                console.print(Panel(summary, title="Resumen IA", border_style="green"))
+                                Prompt.ask("\n[bold]Enter para continuar...[/]")
+                            else:
+                                console.print("\n[bold red]❌ Falló la síntesis.[/]")
+                                time.sleep(2)
+                        except Exception as e:
+                            db_session.rollback()
+                            db_session.expire_all()
+                            console.print(f"\n[bold red]Error actualizando resumen: {e}[/]")
                             time.sleep(2)
 
             elif action == '5':
@@ -968,11 +1006,18 @@ def _show_record_detail(rec_id: int):
                         console.print("\n[bold yellow]✍️  Creación Manual[/]")
                         q = Prompt.ask("[bold bright_cyan]Pregunta[/] (o 'cancelar')", console=console)
                         if q.strip().lower() not in ['cancelar', '']:
-                            a = Prompt.ask("[bold green]Respuesta[/]")
-                            t = Prompt.ask("[bold]Tipo[/]", choices=["Factual", "Conceptual", "Cloze"], default="Factual")
-                            nx_db.create_card(CardCreate(parent_id=rec_id, question=q.strip(), answer=a.strip(), type=t))
-                            console.print("\n[bold green]✅ Tarjeta vinculada.[/bold green]")
-                            time.sleep(1.5)
+                            try:
+                                a = Prompt.ask("[bold green]Respuesta[/]")
+                                t = Prompt.ask("[bold]Tipo[/]", choices=["Factual", "Conceptual", "Cloze"], default="Factual")
+                                nx_db.create_card_in_session(db_session, CardCreate(parent_id=rec_id, question=q.strip(), answer=a.strip(), type=t))
+                                db_session.commit()
+                                console.print("\n[bold green]✅ Tarjeta vinculada y comiteada al mazo.[/bold green]")
+                                time.sleep(1.5)
+                            except Exception as e:
+                                db_session.rollback()
+                                db_session.expire_all()
+                                console.print(f"[bold red]Error de BD añadiendo tarjeta: {e}[/]")
+                                time.sleep(2)
                     
                     elif sub_mz == '1':
                         from core.database import Card
@@ -999,18 +1044,31 @@ def _show_record_detail(rec_id: int):
                                 cid_del = IntPrompt.ask("ID de tarjeta a borrar")
                                 target = db_session.query(Card).filter(Card.id == cid_del, Card.parent_id == rec_id).first()
                                 if target:
-                                    db_session.delete(target); db_session.commit()
-                                    console.print("[green]Borrado exitoso.[/]")
-                                    time.sleep(1)
+                                    try:
+                                        db_session.delete(target)
+                                        db_session.commit()
+                                        console.print("[green]Borrado exitoso.[/]")
+                                        time.sleep(1)
+                                    except Exception as e:
+                                        db_session.rollback()
+                                        db_session.expire_all()
+                                        console.print(f"[red]Fallo al borrar la tarjeta: {e}[/]")
+                                        time.sleep(1.5)
                             elif cmd == '1':
                                 cid_ed = IntPrompt.ask("ID de tarjeta a editar")
                                 target = db_session.query(Card).filter(Card.id == cid_ed, Card.parent_id == rec_id).first()
                                 if target:
-                                    target.question = Prompt.ask("Q", default=target.question)
-                                    target.answer = Prompt.ask("A", default=target.answer)
-                                    db_session.commit()
-                                    console.print("[green]Actualizado.[/]")
-                                    time.sleep(1)
+                                    try:
+                                        target.question = Prompt.ask("Q", default=target.question)
+                                        target.answer = Prompt.ask("A", default=target.answer)
+                                        db_session.commit()
+                                        console.print("[green]Tarjeta Actualizada en Sesión.[/]")
+                                        time.sleep(1)
+                                    except Exception as e:
+                                        db_session.rollback()
+                                        db_session.expire_all()
+                                        console.print(f"[red]Fallo en la actualización BD: {e}[/]")
+                                        time.sleep(1.5)
 
             elif action == '7':
                 # Agregar vínculo rápido desde el detalle
@@ -1018,17 +1076,22 @@ def _show_record_detail(rec_id: int):
                 try:
                     id_b_str = Prompt.ask("[bold]ID del registro a vincular con este (ID2)[/]", console=console)
                     id_b = int(id_b_str.strip())
-                    rec_b = nx_db.get_registry(id_b)
+                    rec_b = nx_db.get_registry_in_session(db_session, id_b)
                     if not rec_b:
-                        console.print("[bold red]Registro destino no encontrado.[/]"); time.sleep(1.5)
+                        console.print("[bold red]Registro destino no encontrado en la Base de Datos.[/]"); time.sleep(1.5)
                     else:
                         rel = Prompt.ask("[bold]Tipo de relación[/] (ej. complementa, refuta)", default="relacionado", console=console)
                         desc_v = Prompt.ask("[bold]Notas[/] (opcional)", default="", console=console)
-                        nx_db.create_link(NexusLinkCreate(source_id=rec_id, target_id=id_b, relation_type=rel, description=desc_v))
+                        nx_db.create_link_in_session(db_session, NexusLinkCreate(source_id=rec_id, target_id=id_b, relation_type=rel, description=desc_v))
+                        db_session.commit()
                         console.print(f"[bold green]✅ Vínculo '{rel}' creado: ID {rec_id} ↔ ID {id_b}[/]")
                         time.sleep(1.5)
-                except (ValueError, Exception) as ve:
-                    console.print(f"[bold red]Error: {ve}[/]"); time.sleep(1.5)
+                except ValueError:
+                    console.print("[bold red]Entrada de ID inválida.[/]"); time.sleep(1)
+                except Exception as ve:
+                    db_session.rollback()
+                    db_session.expire_all()
+                    console.print(f"[bold red]Error fatal gestionando relación: {ve}[/]"); time.sleep(1.5)
 
             elif action == '8':
                 # Agregar a Active Recall (marcar como fuente)
@@ -1038,27 +1101,36 @@ def _show_record_detail(rec_id: int):
                     choices=["0", "1", "2"], show_choices=False, console=console
                 )
                 if opcion_recall == "1" or opcion_recall == "2":
-                    db_session.query(Registry).filter(Registry.id == rec_id).update({
-                        Registry.is_flashcard_source: 1
-                    })
-                    db_session.commit()
-                    console.print("[green]✅ Marcado como fuente de Recall.[/]")
-                    if opcion_recall == "2":
-                        from agents.study_agent import generate_deck_from_registry, get_client
-                        mockup_only = not bool(get_client())
-                        console.print("[yellow]🤖 Generando flashcards...[/]")
-                        with console.status("[dim]Procesando...[/dim]", spinner="dots"):
-                            cards_gen = generate_deck_from_registry(reg, mockup_only=mockup_only)
-                        if cards_gen:
-                            for card_g in cards_gen:
-                                nx_db.create_card(CardCreate(parent_id=rec_id, question=card_g.question, answer=card_g.answer, type=card_g.card_type))
-                            console.print(f"[bold green]✅ {len(cards_gen)} flashcards generadas.[/]")
-                        else:
-                            console.print("[yellow]No se generaron flashcards.[/]")
-                    time.sleep(1.5)
+                    try:
+                        reg.is_flashcard_source = 1
+                        db_session.commit()
+                        console.print("[green]✅ Marcado como fuente de Recall en Base de Datos.[/]")
+                        if opcion_recall == "2":
+                            from agents.study_agent import generate_deck_from_registry, get_client
+                            mockup_only = not bool(get_client())
+                            console.print("[yellow]🤖 Generando flashcards...[/]")
+                            with console.status("[dim]Procesando...[/dim]", spinner="dots"):
+                                cards_gen = generate_deck_from_registry(reg, mockup_only=mockup_only)
+                            if cards_gen:
+                                for card_g in cards_gen:
+                                    nx_db.create_card_in_session(db_session, CardCreate(parent_id=rec_id, question=card_g.question, answer=card_g.answer, type=card_g.card_type))
+                                db_session.commit()
+                                console.print(f"[bold green]✅ {len(cards_gen)} flashcards generadas y acopladas a la DB.[/]")
+                            else:
+                                console.print("[yellow]No se generaron flashcards.[/]")
+                        time.sleep(1.5)
+                    except Exception as e:
+                        db_session.rollback()
+                        db_session.expire_all()
+                        console.print(f"[bold red]Error atómico conectando a SQLite: {e}[/]")
+                        time.sleep(2)
 
     except ReturnToMain:
-        raise  # propagamos para salir al main_loop
+        raise
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Operación interrumpida por el usuario (Ctrl + C). Liberamos memoria local.[/yellow]")
+        raise
+
 
 
 def menu_adelantar_repaso():
