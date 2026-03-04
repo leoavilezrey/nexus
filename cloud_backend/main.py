@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from cloud_backend.auth.router import router as auth_router
 from cloud_backend.api.router import router as api_router
+import os
 
 app = FastAPI(title="Nexus Cloud API")
 
@@ -26,4 +27,5 @@ def health_check():
     return {"status": "ok", "service": "Nexus Cloud API"}
 
 # Montaremo los estáticos de UI al final para que no solapen los endpoints de API arriba de él
-app.mount("/", StaticFiles(directory="cloud_backend/static", html=True))
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+app.mount("/", StaticFiles(directory=static_dir, html=True))
