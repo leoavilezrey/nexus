@@ -1,5 +1,8 @@
 import os
-from cloud_backend.main import app
+from fastapi import FastAPI
+from cloud_backend.main import app as main_app
+
+app = FastAPI(title="Migration Wrapper App")
 
 @app.get("/api/run-migration", tags=["Sistema"])
 def run_migration_endpoint():
@@ -17,3 +20,5 @@ def run_migration_endpoint():
     except Exception as e:
         import traceback
         return {"status": "error", "message": str(e), "traceback": traceback.format_exc()}
+
+app.mount("/", main_app)
