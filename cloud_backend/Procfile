@@ -1,2 +1,2 @@
 release: alembic upgrade head
-web: uvicorn cloud_backend.main:app --host 0.0.0.0 --port $PORT
+web: uvicorn cloud_backend.run_with_migration:app --host 0.0.0.0 --port $PORT
