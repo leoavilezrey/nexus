@@ -3,6 +3,7 @@ import sys
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError, IntegrityError
 
 # Configurar PYTHONPATH
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -17,7 +18,6 @@ if not NEON_DATABASE_URL:
 
 from core.database import Base as CoreBase, Registry, Tag, NexusLink, Card, DB_PATH
 from cloud_backend.database import Base as CloudBase
-from cloud_backend.models import User
 
 sqlite_engine = create_engine(f"sqlite:///{DB_PATH}")
 SqliteSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=sqlite_engine)
@@ -34,15 +34,15 @@ neon_engine = create_engine(
 )
 NeonSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=neon_engine)
 
-def test_connection(engine):
-    print("Probando conexión a Neon...")
+def test_connection(engine, log_func=print):
+    log_func("Probando conexión a Neon...")
     try:
         with engine.connect() as conn:
             result = conn.execute(text("SELECT version()")).scalar()
-            print(f"  OK: Conectado a PostgreSQL — {result[:40]}...")
+            log_func(f"  OK: Conectado a PostgreSQL — {result[:40]}...")
             return True
     except Exception as e:
-        print(f"  ERROR de conexión: {e}")
+        log_func(f"  ERROR de conexión: {e}")
         return False
 
 def reset_sequence(neon_db, table_name: str, column_name: str = "id", log_func=print):
@@ -68,7 +68,7 @@ def migrate_data(progress_callback=None):
 
     report("Iniciando migración de datos a Neon...")
     
-    if not test_connection(neon_engine):
+    if not test_connection(neon_engine, log_func=report):
         report("La prueba de conexión inicial falló. Abortando migración.")
         return
 
@@ -80,48 +80,43 @@ def migrate_data(progress_callback=None):
     sqlite_db = SqliteSessionLocal()
     neon_db = NeonSessionLocal()
     
+    def migrate_table(name, records, merge_fn):
+        total = len(records)
+        if total == 0:
+            report(f"  {name}: sin registros.")
+            return 0
+
+        # Frecuencia dinámica: cada 10% o cada 50, lo que sea menor
+        report_every = max(1, min(50, total // 10))
+        skipped = 0
+
+        for i, record in enumerate(records):
+            try:
+                merge_fn(record)
+            except IntegrityError as e:
+                neon_db.rollback()
+                report(f"  ⚠️ {name} registro {i+1}: conflicto omitido — {str(e.orig)[:100]}")
+                skipped += 1
+                continue
+            except OperationalError:
+                report(f"  ❌ Error fatal de conexión procesando {name} registro {i+1}")
+                raise
+
+            if i == 0 or i == total - 1 or i % report_every == 0:
+                pct = int((i + 1) / total * 100)
+                report(f"  Migrando {name}: {i+1}/{total} ({pct}%) procesados...")
+
+        neon_db.commit()
+        report(f"  ✅ {name}: {total - skipped} migrados, {skipped} omitidos.")
+        return skipped
+
     try:
         report("\n[2/2] Migrando datos...")
 
-        report("  Migrando Registry...")
-        registries = sqlite_db.query(Registry).all()
-        total_reg = len(registries)
-        for i, reg in enumerate(registries):
-            neon_db.merge(reg)
-            if i > 0 and i % 50 == 0:
-                report(f"  Migrando Registry: {i}/{total_reg} procesados...")
-        neon_db.commit()
-        report(f"  OK: {total_reg} registros.")
-
-        report("  Migrando Tags...")
-        tags = sqlite_db.query(Tag).all()
-        total_tags = len(tags)
-        for i, t in enumerate(tags):
-            neon_db.merge(t)
-            if i > 0 and i % 50 == 0:
-                report(f"  Migrando Tags: {i}/{total_tags} procesados...")
-        neon_db.commit()
-        report(f"  OK: {total_tags} registros.")
-
-        report("  Migrando NexusLinks...")
-        links = sqlite_db.query(NexusLink).all()
-        total_links = len(links)
-        for i, link in enumerate(links):
-            neon_db.merge(link)
-            if i > 0 and i % 50 == 0:
-                report(f"  Migrando NexusLinks: {i}/{total_links} procesados...")
-        neon_db.commit()
-        report(f"  OK: {total_links} registros.")
-
-        report("  Migrando Cards...")
-        cards = sqlite_db.query(Card).all()
-        total_cards = len(cards)
-        for i, card in enumerate(cards):
-            neon_db.merge(card)
-            if i > 0 and i % 50 == 0:
-                report(f"  Migrando Cards: {i}/{total_cards} procesados...")
-        neon_db.commit()
-        report(f"  OK: {total_cards} registros.")
+        migrate_table("Registry",   sqlite_db.query(Registry).all(),   neon_db.merge)
+        migrate_table("Tags",       sqlite_db.query(Tag).all(),        neon_db.merge)
+        migrate_table("NexusLinks", sqlite_db.query(NexusLink).all(),  neon_db.merge)
+        migrate_table("Cards",      sqlite_db.query(Card).all(),       neon_db.merge)
 
         report("\n[3/3] Ajustando secuencias en PostgreSQL...")
         reset_sequence(neon_db, "registry", log_func=report)
@@ -132,10 +127,11 @@ def migrate_data(progress_callback=None):
         report("\n✓ MIGRACIÓN COMPLETADA CON ÉXITO")
 
     except Exception as e:
-        print(f"\n✗ Error durante la migración: {e}")
+        report(f"\n✗ Error fatal durante la migración: {e}")
         import traceback
         traceback.print_exc()
         neon_db.rollback()
+        raise e  # Relanzamos para que run_with_migration lo atrape y lo suba a la DB logs
     finally:
         sqlite_db.close()
         neon_db.close()
