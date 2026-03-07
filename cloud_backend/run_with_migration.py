@@ -1,29 +1,46 @@
 import os
+import json
 import traceback
+import tempfile
 from fastapi import FastAPI, BackgroundTasks
 from cloud_backend.main import app as main_app
 
 app = FastAPI(title="Migration Wrapper App")
 
-# Estado global para monitorear la migración en memoria
-migration_state = {
-    "status": "idle",  # Puede ser: idle, running, completed, failed
-    "message": "Ninguna migración ejecutada recientemente.",
-    "error": None
-}
+# Usaremos un archivo JSON en el directorio temporal o local para compartir estado entre workers
+STATE_FILE = os.path.join(tempfile.gettempdir(), "nexus_migration_state.json")
 
+def get_migration_state():
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {
+        "status": "idle",
+        "message": "Ninguna migración ejecutada recientemente.",
+        "error": None
+    }
+
+def set_migration_state(status, message, error=None):
+    state = {
+        "status": status,
+        "message": message,
+        "error": error
+    }
+    try:
+        with open(STATE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(state, f)
+    except Exception as e:
+        print(f"Error escribiendo estado de migración: {e}")
 
 def _run_migration_task():
-    global migration_state
-
-    migration_state["status"] = "running"
-    migration_state["message"] = "Migración en proceso. Esto puede tardar varios minutos..."
-    migration_state["error"] = None
+    set_migration_state("running", "Migración en proceso. Esto puede tardar varios minutos...")
 
     try:
         import importlib.util
 
-        # Buscamos de forma segura el script migrate_sqlite_to_neon.py
         script_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "scripts",
@@ -33,46 +50,47 @@ def _run_migration_task():
         migrate_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(migrate_module)
 
-        # Ejecutar la migración
-        migrate_module.migrate_data()
+        def _update_progress(msg: str):
+            set_migration_state("running", msg)
 
-        migration_state["status"] = "completed"
-        migration_state["message"] = "Migración ejecutada exitosamente."
-        print(migration_state["message"])
+        # Ejecutar la migración con progress_callback
+        migrate_module.migrate_data(progress_callback=_update_progress)
+
+        state = get_migration_state()
+        if state.get("status") == "running": # Evita pisar un error interno si ya cambió el status
+            set_migration_state("completed", "Migración ejecutada exitosamente.")
 
     except Exception as e:
-        migration_state["status"] = "failed"
-        migration_state["message"] = f"Migración falló: {str(e)}"
-        migration_state["error"] = traceback.format_exc()
-        print(f"Error en migración: {e}")
-
+        error_trace = traceback.format_exc()
+        set_migration_state("failed", f"Migración falló: {str(e)}", error_trace)
+        print(f"Error en migración: {e}\n{error_trace}")
 
 @app.get("/api/run-migration", tags=["Sistema"])
 def run_migration_endpoint(background_tasks: BackgroundTasks):
-    """Endpoint para disparar la migración en segundo plano"""
-    global migration_state
+    """Endpoint para disparar la migración en segundo plano con estado compartido"""
+    state = get_migration_state()
 
-    if migration_state["status"] == "running":
+    if state["status"] == "running":
         return {
             "status": "warning",
             "message": "Una migración ya está en curso. Por favor revisa /api/migration-status."
         }
 
-    # Agregamos la tarea al background de FastAPI
+    # Inicializamos el estado antes de mandar al background para bloquear race-conditions 
+    # de llamadas simultáneas muy rápidas (aunque no es perfecto sin atomic locks, es suficiente aquí)
+    set_migration_state("running", "Iniciando proceso de migración en background...")
+    
     background_tasks.add_task(_run_migration_task)
 
     return {
         "status": "accepted",
-        "message": "Migración iniciada en segundo plano. Consulta el endpoint /api/migration-status para ver el progreso."
+        "message": "Migración iniciada. Consulta /api/migration-status para ver el progreso detallado."
     }
-
 
 @app.get("/api/migration-status", tags=["Sistema"])
 def get_migration_status():
     """Endpoint para monitorear el progreso de la migración"""
-    global migration_state
-    return migration_state
+    return get_migration_state()
 
-
-# Montamos la app principal debajo de este wrapper
+# Montamos la app principal debajo de este wrapper para que sirva tanto la API temporal como el sistema normal
 app.mount("/", main_app)
