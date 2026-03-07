@@ -45,7 +45,24 @@ def list_records(
     Lista iterativa con soporte transparente a prefijos h: e: t: o:vdesc, etc.
     """
     filters = parse_query_string(q)
-    return search_registry(db, **filters, limit=limit, offset=offset)
+    inc_exts_list = [e.strip() for e in filters['inc_exts'].split(',')] if filters['inc_exts'] else None
+    exc_exts_list = [e.strip() for e in filters['exc_exts'].split(',')] if filters['exc_exts'] else None
+
+    return search_registry(
+        db_session=db,
+        inc_name_path=filters['inc_name'],
+        exc_name_path=filters['exc_name'],
+        inc_tags=filters['inc_tags'],
+        exc_tags=filters['exc_tags'],
+        inc_extensions=inc_exts_list,
+        exc_extensions=exc_exts_list,
+        has_info=filters['has_info'],
+        record_ids_str=filters['inc_ids'],
+        is_flashcard_source=filters['is_source'],
+        order_by=filters['order_by'],
+        limit=limit,
+        offset=offset
+    )
 
 @router.post("/records/")
 def create_record(
