@@ -45,74 +45,91 @@ def test_connection(engine):
         print(f"  ERROR de conexión: {e}")
         return False
 
-def reset_sequence(neon_db, table_name: str, column_name: str = "id"):
+def reset_sequence(neon_db, table_name: str, column_name: str = "id", log_func=print):
     """Ajusta la secuencia de una tabla usando pg_get_serial_sequence (robusto)."""
     result = neon_db.execute(text(
         f"SELECT pg_get_serial_sequence('{table_name}', '{column_name}')"
     )).scalar()
     
     if result is None:
-        print(f"  AVISO: No se encontró secuencia para {table_name}.{column_name} — omitiendo.")
+        log_func(f"  AVISO: No se encontró secuencia para {table_name}.{column_name} — omitiendo.")
         return
 
     neon_db.execute(text(
         f"SELECT setval('{result}', COALESCE((SELECT MAX({column_name}) FROM {table_name}), 1))"
     ))
-    print(f"  OK: Secuencia '{result}' ajustada.")
+    log_func(f"  OK: Secuencia '{result}' ajustada.")
 
-def migrate_data():
-    print("Iniciando migración de datos a Neon...")
+def migrate_data(progress_callback=None):
+    def report(msg):
+        print(msg)
+        if progress_callback:
+            progress_callback(msg)
+
+    report("Iniciando migración de datos a Neon...")
     
     if not test_connection(neon_engine):
-        print("La prueba de conexión inicial falló. Abortando migración.")
+        report("La prueba de conexión inicial falló. Abortando migración.")
         return
 
-    print("\n[1/2] Creando tablas en Neon...")
+    report("\n[1/2] Creando tablas en Neon...")
     CoreBase.metadata.create_all(bind=neon_engine)
     CloudBase.metadata.create_all(bind=neon_engine)
-    print("  OK: Tablas creadas (o ya existían).")
+    report("  OK: Tablas creadas (o ya existían).")
     
     sqlite_db = SqliteSessionLocal()
     neon_db = NeonSessionLocal()
     
     try:
-        print("\n[2/2] Migrando datos...")
+        report("\n[2/2] Migrando datos...")
 
-        print("  Migrando Registry...")
+        report("  Migrando Registry...")
         registries = sqlite_db.query(Registry).all()
-        for reg in registries:
+        total_reg = len(registries)
+        for i, reg in enumerate(registries):
             neon_db.merge(reg)
+            if i > 0 and i % 50 == 0:
+                report(f"  Migrando Registry: {i}/{total_reg} procesados...")
         neon_db.commit()
-        print(f"  OK: {len(registries)} registros.")
+        report(f"  OK: {total_reg} registros.")
 
-        print("  Migrando Tags...")
+        report("  Migrando Tags...")
         tags = sqlite_db.query(Tag).all()
-        for t in tags:
+        total_tags = len(tags)
+        for i, t in enumerate(tags):
             neon_db.merge(t)
+            if i > 0 and i % 50 == 0:
+                report(f"  Migrando Tags: {i}/{total_tags} procesados...")
         neon_db.commit()
-        print(f"  OK: {len(tags)} registros.")
+        report(f"  OK: {total_tags} registros.")
 
-        print("  Migrando NexusLinks...")
+        report("  Migrando NexusLinks...")
         links = sqlite_db.query(NexusLink).all()
-        for link in links:
+        total_links = len(links)
+        for i, link in enumerate(links):
             neon_db.merge(link)
+            if i > 0 and i % 50 == 0:
+                report(f"  Migrando NexusLinks: {i}/{total_links} procesados...")
         neon_db.commit()
-        print(f"  OK: {len(links)} registros.")
+        report(f"  OK: {total_links} registros.")
 
-        print("  Migrando Cards...")
+        report("  Migrando Cards...")
         cards = sqlite_db.query(Card).all()
-        for card in cards:
+        total_cards = len(cards)
+        for i, card in enumerate(cards):
             neon_db.merge(card)
+            if i > 0 and i % 50 == 0:
+                report(f"  Migrando Cards: {i}/{total_cards} procesados...")
         neon_db.commit()
-        print(f"  OK: {len(cards)} registros.")
+        report(f"  OK: {total_cards} registros.")
 
-        print("\n[3/3] Ajustando secuencias en PostgreSQL...")
-        reset_sequence(neon_db, "registry")
-        reset_sequence(neon_db, "nexus_links")
-        reset_sequence(neon_db, "cards")
+        report("\n[3/3] Ajustando secuencias en PostgreSQL...")
+        reset_sequence(neon_db, "registry", log_func=report)
+        reset_sequence(neon_db, "nexus_links", log_func=report)
+        reset_sequence(neon_db, "cards", log_func=report)
         neon_db.commit()
 
-        print("\n✓ MIGRACIÓN COMPLETADA CON ÉXITO")
+        report("\n✓ MIGRACIÓN COMPLETADA CON ÉXITO")
 
     except Exception as e:
         print(f"\n✗ Error durante la migración: {e}")
